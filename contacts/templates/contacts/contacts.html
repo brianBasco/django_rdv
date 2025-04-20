@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Contacts</title>
+</head>
+
+<body>
+    <h1>Contacts</h1>
+    <ul>
+        {% for contact in connections %}
+        <li>
+            {% if contact.names %}
+            {{ contact.names[0].displayName }}
+            {% endif %}
+            {% if contact.emailAddresses %}
+            - {{ contact.emailAddresses[0].value }}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<form hx-post="{% url 'x_update_rdv' rdv_id %}">
+
+    {% load widget_tweaks %}
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.nom.id_for_label }}">Nom</label>
+        <span><b>*</b></span>
+        {{ form.nom|add_class:"form-control" }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.jour.id_for_label }}">Date</label>
+        <span><b>*</b></span>
+        {{ form.jour|add_class:"form-control"|attr:"type:date" }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.heure_debut.id_for_label }}">{{ form.heure_debut.label }}</label>
+        <span><b>*</b></span>
+        {{ form.heure_debut|add_class:"form-control"|attr:"type:time" }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.heure_fin.id_for_label }}">{{ form.heure_fin.label }}</label>
+        <span class="form-text">(Optionnel)</span>
+        {{ form.heure_fin|add_class:"form-control"|attr:"type:time" }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.lieu.id_for_label }}">Lieu</label>
+        <span><b>*</b></span>
+        {{ form.lieu|add_class:"form-control"|attr:"rows:3" }}
+    </div>
+
+    <div class="mb-3">
+        <input type="submit" value="Mettre à jour" class="btn btn-primary">
+    </div>
+
+</form>

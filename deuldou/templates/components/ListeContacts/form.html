@@ -1,0 +1,24 @@
+<h5 hx-swap-oob="outerHTML: #modalTitle" class="modal-title fs-5" id="modalTitle">Ajouter une liste de contacts</h5>
+
+<form hx-post="{% url 'x_addListeContacts' %}">
+    {% csrf_token %}
+
+    {{ form.user }}
+
+    <div class="mb-3">
+        <label for="nom_liste" class="form-label">Nom de la liste</label>
+        {{ form.nom }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ajoutez vos contacts :</label>
+
+        <div class="form-check">
+            {{ form.contacts }}
+        </div>
+    </div>
+
+
+
+    <input class="btn btn-primary" type="submit" value="Enregistrer">
+</form>

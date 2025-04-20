@@ -1,0 +1,53 @@
+{% extends "layout/base2.html" %}
+
+{% comment %}
+{% extends "layout/users.html" %}
+{% endcomment %}
+
+
+{% block title %}
+<title>Rdv</title>
+{% endblock title %}
+
+{% block content %}
+
+<!-- Modal static -->
+{% include 'components/Modal/modalStatic.html' %}
+
+{% comment %}
+<!-- Modal de participation -->
+<div class="modal fade" id="ModalUpdateParticipation" tabindex="-1" aria-labelledby="ModalUpdateParticipation"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" id="ModalUpdateParticipationContent">
+      ...
+    </div>
+  </div>
+</div>
+<!-- Fin du Modal -->
+{% endcomment %}
+
+<div class="container">
+
+  <div class="container py-4">
+    <h1 class="titre">Votre liste de Rdv!</h1>
+  </div>
+
+
+  <!-- Button trigger modal -->
+  <div class="mb-3 d-flex justify-content-end">
+    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
+      hx-get="{% url 'x_addRdv' %}" hx-target="#modalStatic">
+      <b>+ </b>Ajouter un rendez-vous
+    </button>
+  </div>
+
+
+  <div id="liste_rdvs" hx-get="{% url 'x_getRdvs' %}" hx-trigger="load, updateRDV from:body" hx-swap="innerHTML">
+
+    {# Liste des Rdvs à charger avec Xthml, template : partial liste_rdvs #}
+
+  </div>
+</div>
+
+{% endblock content %}

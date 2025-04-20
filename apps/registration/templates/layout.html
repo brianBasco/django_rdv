@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-5.0.2-dist/css/bootstrap.min.css' %}" />
+    <!-- Style CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style-dist/style.css' %}" />
+
+    {% block title %}
+
+    {% endblock title %}
+
+</head>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1">RDV</span>
+    </div>
+</nav>
+
+{% if messages %}
+
+{% for message in messages %}
+<div class="alert {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+    {{ message }}
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+
+{% block content %}
+
+{% endblock content %}
+
+<script type="text/javascript" src="{% static 'bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/check_passwords.js' %}"></script>
+<script type="text/javascript" src="{% static 'htmx/htmx-1.8.4.js' %}"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+</body>
+
+</html>

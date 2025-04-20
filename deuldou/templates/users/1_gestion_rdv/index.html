@@ -1,0 +1,107 @@
+{% extends "layout/users.html" %}
+
+{% block content %}
+
+{% include 'components/Modal/modalConfirm.html' %}
+
+
+<div class="container">
+
+  <div class="container py-4">
+    <h1 class="h1 titre">Gestion de vos Rdv!</h1>
+  </div>
+
+  <div class="form-text">
+    <p>Sur cette page vous pouvez créer, modifier, supprimer les Rdv que vous avez créés</p>
+    <p>Vous pouvez modifier également les participants à vos Rdv, en ajouter ou en supprimer</p>
+    <p>Notez cependant que vous ne pouvez pas modifier la participation de vos invités (vous ne pouvez pas mettre un
+      partcipant Présent comme Absent par exemple)</p>
+  </div>
+
+
+  <div class="mb-3 d-flex justify-content-end">
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
+      hx-get="{% url 'x_addRdv' %}" hx-target="#modalStatic">
+      <b>+ </b>Ajouter un
+      rendez-vous</button>
+  </div>
+
+  <div class="accordion accordion-flush" id="accordionExample" hx-get="{% url 'x_get_rdvs' %}"
+    hx-trigger="load, updateRDV from:body">
+
+    {% comment %}
+    Récupère la liste des Rdvs avec les triggers
+    Insertion des participants par appel à Htmx -> template : liste_rdvs.html
+    {% endcomment %}
+  </div>
+
+</div>
+
+
+
+{% endblock content %}
+
+{% block script %}
+
+
+<script>
+
+  document.body.addEventListener("rdvDeleted", function (evt) {
+    //document.getElementById("accordion-item_" + evt.detail.value).remove()
+    //$("#accordion-item_" + evt.detail.value).fadeOut(1000, function () {$(this).remove();
+    $("#accordion-item_" + evt.detail.value).remove();
+  });
+
+
+  $(document).ready(function () {
+    // Détecter l'événement de fermeture du modal
+    $('#modalConfirm').on('hidden.bs.modal', function () {
+      // Vider le contenu du modal
+      $(this).find('#modalConfirmFooterButtons').empty();
+    });
+    $('#modalConfirm').on('shown.bs.modal', function () {
+      // Ajouter le titre
+      $(this).find('#modalConfirmTitle').html("Confirmation");
+    });
+  });
+
+
+  //function sendContacts(div) {
+  let sendContacts = (div) => {
+    console.log("hello !!")
+    // {# url 'x_selectContacts' rdv_id #}
+
+  }
+
+
+  let modalAskDelete = (message, participant_id) => {
+    const urlPattern = "{% url 'x_deleteParticipant' 0 %}"; // Génère l'URL partielle
+    const finalUrl = urlPattern.replace('0', participant_id);
+    const buttonConfirm = `<button type="button" class="btn btn-outline-danger" hx-target="#modalConfirm" hx-post="${finalUrl}">Suppression</button>`;
+    const buttonCancel = '<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>'
+    $("#modalConfirmBody").html(message);
+    $("#modalConfirmFooterButtons").append(buttonCancel);
+    $("#modalConfirmFooterButtons").append(buttonConfirm);
+    // Sélectionner le conteneur où le bouton sera ajouté
+    const container = document.getElementById('modalConfirm');
+    // Réinitialiser HTMX pour prendre en compte les nouveaux éléments
+    htmx.process(container);
+  }
+
+  let askModalDeleteRdv = (message, rdv_id) => {
+    const urlPattern = "{% url 'x_deleteRdv' 0 %}"; // Génère l'URL partielle
+    const finalUrl = urlPattern.replace('0', rdv_id);
+    const buttonConfirm = `<button type="button" class="btn btn-outline-danger" hx-target="#modalConfirm" hx-delete="${finalUrl}">Suppression</button>`;
+    const buttonCancel = '<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>'
+    $("#modalConfirmBody").html(message);
+    $("#modalConfirmFooterButtons").append(buttonCancel);
+    $("#modalConfirmFooterButtons").append(buttonConfirm);
+    // Sélectionner le conteneur où le bouton sera ajouté
+    const container = document.getElementById('modalConfirm');
+    // Réinitialiser HTMX pour prendre en compte les nouveaux éléments
+    htmx.process(container);
+  }
+
+</script>
+
+{% endblock script %}

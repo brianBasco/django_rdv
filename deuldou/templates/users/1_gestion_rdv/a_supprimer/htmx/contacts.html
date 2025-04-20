@@ -1,0 +1,15 @@
+<div class="container">
+
+    <ul class="list-group">
+        
+        {% for item in items %}
+        <li hx-post="/htmx_add_contact/{{ id_rdv }}/{{ item.id }}"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-target="#inner-modal_body"
+
+         class="list-group-item btn btn-primary btn-sm">{{ item.nom }}</li>
+          {% endfor%}
+      </ul>
+    
+</div>

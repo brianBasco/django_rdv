@@ -1,0 +1,18 @@
+{# Permet de remplacer le Texte du bouton de fermeture - au lieu du texte 'Close' #}
+{% if button %}
+<div hx-swap-oob="innerHtml:#modalFooter">
+    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ button }}</button>
+</div>
+{% endif %}
+
+{% if success %}
+<div class="alert alert-success" role="alert">
+    {{ success }}
+</div>
+{% endif %}
+
+{% if error %}
+<div class="alert alert-error" role="alert">
+    {{ error }}
+</div>
+{% endif %}

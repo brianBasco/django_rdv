@@ -1,0 +1,51 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header" id="modalHeader">
+            <h5 class="modal-title fs-5" id="modalTitle">Ajouter des contacts</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modalBody">
+
+            <div class="container" id="selectContacts">
+
+
+                {% if formset %}
+                <form id="contact-form">
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+
+                    {{ form.non_field_errors }}
+                    {{ form.email }}
+                    {{ form.nom }}
+                    <div class="form-check">
+                        {{ form.is_checked }}
+
+                        <label class="form-check-label" for="{{ form.is_checked.id_for_label }}">
+                            <b>{{ form.nom.value }}</b>
+                            ({{ form.email.value }})
+                        </label>
+
+
+                    </div>
+
+                    {% endfor %}
+                </form>
+                {% else %}
+
+                Aucun contact à ajouter
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+        <div class="modal-footer" id="modalFooter">
+            <button type="button" class="btn btn-default" hx-get="{% url 'x_addParticipant' rdv_id %}"
+                hx-target="#modalStatic"><- </button>
+                    <button type="button" class="btn btn-primary" hx-post="{% url 'x_selectContacts' rdv_id %}"
+                        hx-include="#contact-form" hx-target="#modalStatic">Sauvegarder</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+    </div>
+</div>

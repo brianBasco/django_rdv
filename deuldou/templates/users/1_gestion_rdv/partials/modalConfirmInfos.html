@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title fs-5" id="modalConfirmTitle">{{ titre|default_if_none:'' }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modalConfirmBody">
+            {% if success %}
+            {% for msg in success %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% if errors %}
+            {% for error in errors %}
+            <div class="alert alert-error" role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="modal-footer" id="modalConfirmFooter">
+            <span id="modalConfirmFooterButtons">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" aria-label="Close">Ok</button>
+            </span>
+
+        </div>
+    </div>
+</div>

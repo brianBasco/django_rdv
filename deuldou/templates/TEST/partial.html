@@ -1,0 +1,15 @@
+<div hx-swap-oob="beforeend:#messages">
+    {% include 'layout/partials/infos.html' %}
+</div>
+
+
+<div class="container">
+
+    {% for res in results %}
+
+    <div class="container">
+        {{ res }}
+    </div>
+
+    {% endfor %}
+</div>

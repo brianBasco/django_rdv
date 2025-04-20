@@ -1,0 +1,62 @@
+{# swap OOB dans le modal : Header #}
+<h1 hx-swap-oob="innerHTML:#staticBackdropLabel" class="modal-title">Ajouter un Rendez-vous</h1>
+
+{# Display a form #}
+
+<div id="RdvForm">
+
+    {% if form.errors %}
+    {% for field in form %}
+    {% for error in field.errors %}
+    <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+    </div>
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
+
+    <div class="container">
+        <div class="form-text">Les champs marqués d'une étoile <b>(*)</b> sont obligatoires</div>
+    </div>
+
+    <form class="form p-2" hx-post="{% url 'x_addRdv' %}" hx-swap="outerHTML" hx-target="#RdvForm">
+        {% csrf_token %}
+        {% load widget_tweaks %}
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.nom.id_for_label }}">Nom</label>
+            <span><b>*</b></span>
+            {{ form.nom|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.jour.id_for_label }}">Date</label>
+            <span><b>*</b></span>
+            {{ form.jour|add_class:"form-control"|attr:"type:date" }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.heure_debut.id_for_label }}">{{ form.heure_debut.label }}</label>
+            <span><b>*</b></span>
+            {{ form.heure_debut|add_class:"form-control"|attr:"type:time" }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.heure_fin.id_for_label }}">{{ form.heure_fin.label }}</label>
+            <span class="form-text">(Optionnel)</span>
+            {{ form.heure_fin|add_class:"form-control"|attr:"type:time" }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.lieu.id_for_label }}">Lieu</label>
+            <span><b>*</b></span>
+            {{ form.lieu|add_class:"form-control"|attr:"rows:3" }}
+        </div>
+        <div class="mb-3 form-check">
+            <label class="form-check-label" for="createur_participe">Vous participez ?</label>
+            <input type="checkbox" class="form-check-input" id="createur_participe" name="createur_participe" checked>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Créer RDV</button>
+
+
+    </form>
+</div>

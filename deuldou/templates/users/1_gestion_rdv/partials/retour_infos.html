@@ -1,0 +1,20 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="modal-body" id="modalBody">
+            {% if success %}
+            <div class="alert alert-success" role="alert">
+                {{ success }}
+            </div>
+            {% endif %}
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="modal-footer" id="modalFooter">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Ok</b></button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+{% for rdv in rdvs %}
+<div class="card card-custom text-bg-light mb-3">
+    <div class="card-header">
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+
+            <button class="btn btn-sm btn-infos-custom" type="button" data-bs-toggle="collapse"
+                data-bs-target="#infos_{{ rdv.id }}" aria-expanded="false" aria-controls="collapseInfos">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z" />
+                </svg>
+            </button>
+
+
+            <button class="btn dropdown-toggle btn-sm btn-people-fill-custom" type="button" data-bs-toggle="collapse"
+                data-bs-target="#participants_{{ rdv.id }}" aria-expanded="false" aria-controls="collapseParticipants">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-people-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                </svg>
+            </button>
+
+            <button class="btn btn-outline-secondary btn-sm" type="button" id="nbre_participants_{{ rdv.id }}"></button>
+
+            <a href="{% url 'download_cal' rdv.id %}" class="btn btn-outline-secondary btn-sm" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-calendar-check" viewBox="0 0 16 16">
+                    <path
+                        d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                    <path
+                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+    <div class="card-body card-body-custom">
+        <div class="card-title">
+            <div class="d-md-flex justify-content-between align-items-center">
+                {{ rdv.nom }}
+
+                <div class="d-flex align-items-start">
+                    {{ rdv.jour }}
+                </div>
+            </div>
+
+        </div>
+        <div id="infos_{{ rdv.id }}" class="collapse">
+
+            <div class="d-md-flex justify-content-between align-items-center">
+                lieu : {{ rdv.lieu }}
+
+                <div class="d-flex align-items-start">
+                    Début : {{ rdv.heure_debut }}
+                    Fin : {{ rdv.heure_fin }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ol class="list-group collapse card" id="participants_{{ rdv.id }}" hx-get="{% url 'htmx_getParticipants' rdv.id %}"
+        hx-trigger="load, updateParticipants_{{ rdv.id }} from:body" hx-swap="innerHTML">
+
+    </ol>
+
+</div>
+{% empty %}
+<div class="container">
+    Il n'y a aucun rendez-vous à afficher
+</div>
+{% endfor %}

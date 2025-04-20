@@ -1,0 +1,48 @@
+{# some text #}
+<div hx-swap-oob="innerHTML:#nbre_participants_{{ id_rdv }}">
+    {{ nbre }}
+</div>
+
+{% for p in participants %}
+<li class="list-group-item list-group-item-custom statut-{{ p.statut }}">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Élément placé à gauche -->
+                <b>{{ p.nom }}</b>
+                {{ p.get_statut_display }}
+            </div>
+            <div class="col text-end">
+                <!-- Bouton placé à droite -->
+                <!-- Button trigger modal -->
+                {% if request.user.email == p.email %}
+                <button hx-get="{% url 'htmx_updateParticipant' p.id %}" hx-target="#modalStatic" type="button"
+                    class="btn btn-sm btn-modify-custom" data-bs-toggle="modal" data-bs-target="#modalStatic">
+                    Modifier
+                </button>
+                {% endif%}
+
+            </div>
+        </div>
+    </div>
+
+
+
+    {% comment %}
+    <div class="d-md-flex justify-content-between align-items-center">
+        <b>{{ p.nom }}</b>
+        {{ p.get_statut_display }}
+        {% if request.user.email == p.email %}
+        <div class="d-flex align-items-start">
+            <!-- Button trigger modal -->
+            <button hx-get="{% url 'htmx_updateParticipant' p.id %}" hx-target="#modalBody" type="button"
+                class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
+                Modifier
+            </button>
+        </div>
+        {% endif%}
+    </div>
+    {% endcomment %}
+
+</li>
+{% endfor %}

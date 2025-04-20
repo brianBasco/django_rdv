@@ -1,0 +1,88 @@
+{% extends "layout/users.html" %}
+
+{% block content %}
+
+<div class="container my-3">
+  <p class="h1 titre">Gérer vos contacts</p>
+  <div class="form-text">Vous pouvez ajouter des contacts ou créer des listes. Vous pouvez ajouter vos contacts dans vos
+    listes</div>
+</div>
+
+<!-- Navigation par tabs -->
+<div class="container">
+  <ul class="nav nav-tabs" id="Tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="contacts-tab" data-bs-toggle="tab" data-bs-target="#contacts-tab-pane"
+        type="button" role="tab" aria-controls="contacts-tab-pane" aria-selected="true">Contacts</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="liste-tab" data-bs-toggle="tab" data-bs-target="#liste-tab-pane" type="button"
+        role="tab" aria-controls="liste-tab-pane" aria-selected="false" hx-get="{% url 'x_getListesContacts' %}"
+        hx-target="#liste_listeContacts">Liste de contacts</button>
+    </li>
+  </ul>
+</div>
+
+<!-- FIn de la navigation par tabs-->
+
+<div class="container">
+
+  <div class="tab-content" id="TabContent">
+    <div class="tab-pane fade show active" id="contacts-tab-pane" role="tabpanel" aria-labelledby="contacts-tab"
+      tabindex="0">
+      <div class="py-4">
+        <button hx-get="{% url 'x_addContact' %}" hx-target="#modalBody" type="button" class="btn btn-primary btn-sm"
+          data-bs-toggle="modal" data-bs-target="#modalStatic">
+          Ajouter contact +
+        </button>
+      </div>
+      <div>
+
+        <div id="liste_contacts" class="py-4" hx-get="{% url 'x_getContacts' %}"
+          hx-trigger="load, addContact from:body">
+
+          {# Insertion de la liste des contacts après Load #}
+
+        </div>
+
+      </div>
+    </div>
+
+    {# Partie sur la LISTE de contacts #}
+
+    <div class="tab-pane fade" id="liste-tab-pane" role="tabpanel" aria-labelledby="liste-tab" tabindex="0">
+
+      <div class="py-4">
+        <button hx-get="{% url 'x_addListeContacts' %}" hx-target="#modalBody" type="button"
+          class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
+          Ajouter une liste de Contacts
+        </button>
+      </div>
+      <div>
+
+        <div id="liste_listeContacts" class="py-4">
+
+          {# Insertion de la liste des contacts après Load #}
+
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  {% endblock content %}
+
+  {% block script %}
+  <script>
+    $(document).ready(function () {
+      // Détecter l'événement de fermeture du modal
+      $('#modalStatic').on('hidden.bs.modal', function () {
+        // Vider le contenu du modal
+        $(this).find('#modalFooterButtons').empty();
+      });
+    });
+  </script>
+  {% endblock script %}

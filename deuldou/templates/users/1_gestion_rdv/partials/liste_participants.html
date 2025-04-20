@@ -1,0 +1,21 @@
+{% for participant in participants %}
+<li class="list-group-item">
+  <div class="row">
+    <div class="col">
+      <b>{{ forloop.counter }}. {{ participant.nom }}</b> [{{ participant.get_statut_display }}]
+    </div>
+    <div class="col text-end">
+      <button id="btn_del_{{ participant.id }}" type="button" class="btn btn-sm btn-delete2-custom" alt="supprimer"
+        aria-label="Supprimer" data-bs-toggle="modal" data-bs-target="#modalConfirm"
+        onclick="modalAskDelete('Supprimer {{ participant.nom }} ?', '{{ participant.id }}')">
+        <b>X</b>
+      </button>
+    </div>
+  </div>
+
+</li>
+{% empty %}
+<div class="container py-5">
+  Il n'y a aucun inscrit
+</div>
+{% endfor %}

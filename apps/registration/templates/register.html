@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Register</title>
+{% endblock title %}
+
+{% block content %}
+
+
+<section class="vh-100 gradient-custom my-3">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+
+
+
+        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+          <div class="card-body">
+            <div class="container">
+
+              <div class="my-3">
+                <p class="text-center h1 fw-bold">Créer un compte</p>
+                <div class="form-text">Les champs marqués d'une étoile <b>(*)</b> sont obligatoires</div>
+              </div>
+
+
+              <form action="{% url 'registration' %}" method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Email (*)</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                    name="email" required>
+                  <div id="emailHelp" class="form-text">Votre adresse mail qui servira comme identifiant de connexion.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="nom" class="form-label">Votre nom (*)</label>
+                  <input type="text" class="form-control" id="nom" aria-describedby="Votre nom" name="nom">
+                  <div id="nomHelp" class="form-text">Le nom qui apparaitra sur vos rendez-vous, ce nom pourra être
+                    modifié plus tard.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Mot de passe (*)</label>
+                  <input type="password" class="form-control" id="password" name="password" onkeyup="check_passwords()"
+                    required pattern=".{8,}" title="8 caractères minimum" required />
+                  <div id="passwordHelp" class="form-text">créez votre mot de passe et conservez le précieusement.
+                  </div>
+                  <div id="passwordHelp2" class="form-text">Votre mot de passe doit faire 8 caractères au minimum.
+                  </div>
+                  <div id="check_password" class="form-text"></div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Créer son compte!</button>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="d-grid gap-2">
+                    <a type="button" class="btn btn-warning" href="{% url 'login' %}">Retour à la page
+                      de
+                      connexion</a>
+                  </div>
+                </div>
+
+              </form>
+
+
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+{% endblock content %}

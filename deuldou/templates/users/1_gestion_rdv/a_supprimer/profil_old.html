@@ -1,0 +1,28 @@
+{% extends "layout/users.html" %}
+
+{% block content %}
+
+{% load static %}
+<div class="d-flex justify-content-end">
+  <a class="btn btn-primary btn-sm" href="{% url 'logout' %}">Se déconnecter</a>
+</div>
+
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container py-5">
+      <div class="d-flex justify-content-center align-items-center">
+  
+          <div class="card" style="width: 15rem;">
+            <img src="{% static 'css/images/image_profil.svg' %}" class="card-img-top" alt="image du profil" style="width: 80%;
+            margin: 5px auto;" />
+            <div class="card-body">
+              <h5 class="card-title">Email : {{ request.user.email }}</h5>
+              <p class="card-text">Nom apparaissant sur vos RDV! <b>{{ request.user.first_name }}</b></p>
+              <a href="{% url 'modifier_password' %}" class="btn btn-primary">Changer votre mot de passe</a>
+            </div>
+          </div>
+  
+      </div>
+    </div>
+  </section>
+
+{% endblock content %}

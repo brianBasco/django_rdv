@@ -1,0 +1,50 @@
+<form hx-post="{% url 'htmx_updateParticipant' id_participant  %}" hx-target="#modalStatic">
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {{ form.nom|add_class:"form-control"|attr:"placeholder:nom"}}
+                {% for error in form.nom.errors %}
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                        <use xlink:href="#exclamation-triangle-fill" />
+                    </svg>
+                    <div>
+                        {{ error }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col">
+                {{ form.statut|add_class:"form-control"}}
+                {% for error in form.statut.errors %}
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                        <use xlink:href="#exclamation-triangle-fill" />
+                    </svg>
+                    <div>
+                        {{ error }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </diV>
+
+    </div>
+
+
+</form>

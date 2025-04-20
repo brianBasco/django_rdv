@@ -1,0 +1,18 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header" id="modalHeader">
+            <h5 class="modal-title" id="modalTitle">Ajouter un participant</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            {% include 'components/Participant/ParticipantForm.html' %}
+
+        </div>
+        <div class="modal-footer" id="modalFooter">
+
+            <button type="button" class="btn btn-secondary" hx-get="{% url 'x_selectContacts' rdv_id %}"
+                hx-target="#modalStatic">Sélectionner des contacts</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+    </div>
+</div>

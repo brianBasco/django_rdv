@@ -1,0 +1,17 @@
+{% extends "layout/users.html" %}
+
+
+{% block content %}
+
+<div class="container my-3">
+    <p class="text-center h1 fw-bold">Création d'un Rdv!</p>
+    <div class="form-text">Les champs marqués d'une étoile <b>(*)</b> sont obligatoires</div>
+  </div>
+
+<div class="container">
+
+    {% include 'components/RdvForm.html' %}
+
+</div>
+
+{% endblock content %}

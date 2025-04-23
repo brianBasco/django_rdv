@@ -289,18 +289,18 @@ def x_updateContact(request: HttpRequest, contact_id:int):
     """
     try:
         contact:Contact = Contact.get_for_user(pk=contact_id, user=request.user)
-    except Exception as e:
-        return render(request, "components/Contact/UpdateContactSuccessModal.html",  {'error':HttpResponse(ERREUR)})
-    else:
-        form: ContactForm = ContactForm(instance=contact)
-        if request.method == "POST":
-            form: ContactForm = ContactForm(request.POST, instance=contact)
-            if form.is_valid():
-                form.save()
-                response = render(request, "components/Contact/UpdateContactSuccessModal.html",  {'success': 'Contact modifié'})
-                response.headers["HX-Trigger"] = "addContact"
-                return response
-        return render(request, "components/Contact/UpdateContactModal.html", {'form': form, 'contact_id': contact_id})
+    except:
+        return render(request, "components/Contact/UpdateContactSuccessModal.html",  {'error': "Une erreur est survenue"})
+    
+    form: ContactForm = ContactForm(instance=contact)
+    if request.method == "POST":
+        form: ContactForm = ContactForm(request.POST, instance=contact)
+        if form.is_valid():
+            form.save()
+            response = render(request, "components/Contact/UpdateContactSuccessModal.html",  {'success': 'Contact modifié'})
+            response.headers["HX-Trigger"] = "addContact"
+            return response
+    return render(request, "components/Contact/UpdateContactModal.html", {'form': form, 'contact_id': contact_id})
     
 
 @login_required

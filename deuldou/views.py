@@ -240,7 +240,7 @@ def contacts_view(request: HttpRequest):
 
 @login_required
 def x_getContacts(request: HttpRequest):
-    contacts: list[Contact] = request.user.contacts.all()
+    contacts: list[Contact] = request.user.contacts.all().order_by('email')
     return render(request, "users/2_contacts/partials/liste_contacts.html", {'contacts': contacts})
 
 
@@ -354,7 +354,7 @@ def x_deleteListeContacts(request: HttpRequest, liste_id: int):
             return HttpResponse("Contact non trouvé.", status=404)
         except Exception:
             return HttpResponse("Erreur serveur.", status=500)
-        
+
         liste.delete()
         return HttpResponse(status=200)
 

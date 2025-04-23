@@ -124,41 +124,11 @@ def rdv_template(request: HttpRequest):
 
 # ------------------- Fin des vues des components ---------------------
 
-
-
-# ------------------- Vues du profil  ---------------------
-
-@login_required
-def x_get_profil(request: HttpRequest):
-    return render(request, 'components/Profil/ProfilModal.html')
-
-"""
-@login_required
-def modifier_password(request: HttpRequest):
-    user: User = request.user
-    if request.method == 'POST':
-        password = request.POST["password"]
-        password2 = request.POST["password2"]
-        if not password == password2:
-            messages.add_message(request, messages.ERROR,
-                                 'Les mots de passe ne correspondent pas')
-        else:
-            user.set_password(password)
-            user.save()
-            login(request, user)
-            messages.add_message(request, messages.SUCCESS,
-                                 "Your password has been changed")
-            return redirect('home')
-
-    return render(request, 'users/3_profil/modifier_password.html')
-
-"""
-
 # ------------------- Vues de L'application  ---------------------
 
 
 @login_required
-def home(request: HttpRequest):
+def home_view(request: HttpRequest):
     """
     Retourne la liste des RDV où le User participe\n
     Classement des participations dans l'ordre ascendant
@@ -167,7 +137,7 @@ def home(request: HttpRequest):
 
 
 @login_required
-def x_getRdvs(request: HttpRequest):
+def x_get_my_rdvs(request: HttpRequest):
     """
     Sécurité : OK
     Retourne la liste des RDV où le User participe\n
@@ -207,7 +177,7 @@ def x_addRdv(request: HttpRequest):
 
 
 @login_required
-def htmx_updateParticipant(request: HttpRequest, id_participant: int):
+def x_updateMyParticipation(request: HttpRequest, id_participant: int):
     """
     Sécurité : à tester !
     Retourne le Participant de ce RDV
@@ -233,7 +203,7 @@ def htmx_updateParticipant(request: HttpRequest, id_participant: int):
 
 
 @login_required
-def htmx_getParticipants(request: HttpRequest, id_rdv: int):
+def x_getParticipants(request: HttpRequest, id_rdv: int):
     """
     Sécurité : à tester !!
     Retourne les participants à un RDV
@@ -297,20 +267,18 @@ def add_liste_contact_view(request: HttpRequest):
 @login_required
 def x_addContact(request: HttpRequest):
     """
-    Sécurité : à tester
     Ajoute un Contact à un User
-    NON FONCTIONNEL
     """
     if request.method == "POST":
         form: ContactForm = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            response = render(request, 'components/Contact/formInfos.html', {'success': 'Contact ajouté'})
+            response = render(request, 'components/Contact/ContactSuccessModal.html', {'success': 'Contact ajouté'})
             response.headers["HX-Trigger"] = "addContact"
             return response
     else:
         form: ContactForm = ContactForm(initial={'user': request.user})
-    return render(request, "components/Contact/ContactForm.html", {'form': form})
+    return render(request, "components/Contact/ContactModal.html", {'form': form})
 
 
 @login_required
@@ -338,7 +306,6 @@ def x_updateContact(request: HttpRequest, contact_id:int):
 @login_required
 def x_deleteContact(request: HttpRequest, contact_id: int):
     """
-    Sécurité : à tester
     Supprimme un Contact créé par le USER
     Fonctionnel
     """
@@ -375,20 +342,31 @@ def x_updateListeContacts(request: HttpRequest):
     ...
 
 @login_required
-def x_deleteListeContacts(request: HttpRequest):
-    ...
+def x_deleteListeContacts(request: HttpRequest, liste_id: int):
+    """
+    Supprimme une Liste de Contacts créée par le USER
+    Fonctionnel
+    """
+    if request.method == 'DELETE':
+        try:
+            liste: ListeContacts = ListeContacts.get_for_user(pk=liste_id, user=request.user)
+        except PermissionDenied:
+            return HttpResponse(PERMISSION)
+        except:
+            return HttpResponse(ERREUR)
+        else:
+            liste.delete()
+            return HttpResponse(status=200)
 
 # ------------------- Vues de gestion des RDV  ---------------------
 
 @login_required
-def gerer_rdvs(request: HttpRequest):
+def gerer_rdvs_view(request: HttpRequest):
     """
     Sécurité: OK
     Retourne les RDV créés par le USER
     Fonctionnel
     """
-    # rdvs: list[Deuldou] = Deuldou.objects.filter(created_by=request.user).order_by('jour')
-    # return render(request, "users/1_gestion_rdv/index.html", {'rdvs': rdvs})
     return render(request, "users/1_gestion_rdv/index.html")
 
 

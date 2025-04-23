@@ -1,9 +1,11 @@
-{% extends "layout/users.html" %}
+{% extends "layout/base2.html" %}
 
 {% block content %}
 
 {% include 'components/Modal/modalConfirm.html' %}
 
+<!-- Modal static -->
+{% include 'components/Modal/modalStatic.html' %}
 
 <div class="container">
 
@@ -19,8 +21,8 @@
   </div>
 
 
-  <div class="mb-3 d-flex justify-content-end">
-    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
+  <div class="mb-3">
+    <button class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
       hx-get="{% url 'x_addRdv' %}" hx-target="#modalStatic">
       <b>+ </b>Ajouter un
       rendez-vous</button>

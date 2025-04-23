@@ -1,6 +1,9 @@
-{% extends "layout/users.html" %}
+{% extends "layout/base2.html" %}
 
 {% block content %}
+
+<!-- Modal static -->
+{% include 'components/Modal/modalStatic.html' %}
 
 <div class="container my-3">
   <p class="h1 titre">Gérer vos contacts</p>
@@ -31,8 +34,8 @@
     <div class="tab-pane fade show active" id="contacts-tab-pane" role="tabpanel" aria-labelledby="contacts-tab"
       tabindex="0">
       <div class="py-4">
-        <button hx-get="{% url 'x_addContact' %}" hx-target="#modalBody" type="button" class="btn btn-primary btn-sm"
-          data-bs-toggle="modal" data-bs-target="#modalStatic">
+        <button hx-get="{% url 'x_addContact' %}" hx-target="#modalStatic" type="button"
+          class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
           Ajouter contact +
         </button>
       </div>
@@ -54,7 +57,7 @@
 
       <div class="py-4">
         <button hx-get="{% url 'x_addListeContacts' %}" hx-target="#modalBody" type="button"
-          class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
+          class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
           Ajouter une liste de Contacts
         </button>
       </div>

@@ -1,9 +1,5 @@
 {% extends "layout/base2.html" %}
 
-{% comment %}
-{% extends "layout/users.html" %}
-{% endcomment %}
-
 
 {% block title %}
 <title>Rdv</title>
@@ -36,7 +32,7 @@
 
   <!-- Button trigger modal -->
   <div class="mb-3 d-flex justify-content-end">
-    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
+    <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
       hx-get="{% url 'x_addRdv' %}" hx-target="#modalStatic">
       <b>+ </b>Ajouter un rendez-vous
     </button>

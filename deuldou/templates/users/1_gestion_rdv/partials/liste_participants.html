@@ -5,8 +5,8 @@
       <b>{{ forloop.counter }}. {{ participant.nom }}</b> [{{ participant.get_statut_display }}]
     </div>
     <div class="col text-end">
-      <button id="btn_del_{{ participant.id }}" type="button" class="btn btn-sm btn-delete2-custom" alt="supprimer"
-        aria-label="Supprimer" data-bs-toggle="modal" data-bs-target="#modalConfirm"
+      <button id="btn_del_{{ participant.id }}" type="button" class="btn btn-sm btn-outline-danger" alt="supprimer"
+        aria-label="Supprimer" data-bs-toggle="modal" title="Supprimer le participant" data-bs-target="#modalConfirm"
         onclick="modalAskDelete('Supprimer {{ participant.nom }} ?', '{{ participant.id }}')">
         <b>X</b>
       </button>

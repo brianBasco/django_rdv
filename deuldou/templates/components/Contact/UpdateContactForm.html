@@ -1,5 +1,3 @@
-<h5 hx-swap-oob="outerHTML: #modalTitle" class="modal-title fs-5" id="modalTitle">Modifier le contact</h5>
-
 <form hx-post="{% url 'x_updateContact' contact_id %}">
     {% csrf_token %}
     {% load widget_tweaks %}

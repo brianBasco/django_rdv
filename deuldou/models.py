@@ -155,5 +155,12 @@ class ListeContacts(models.Model):
     def __str__(self):
         return self.nom
     
+    @classmethod
+    def get_for_user(cls, pk:int, user:User):
+        liste: ListeContacts = cls.objects.get(pk=pk)
+        if liste.user != user:
+            raise PermissionDenied()
+        return liste
+    
     
 """ ----------------  FIN DES CONTACTS ----------------------- """

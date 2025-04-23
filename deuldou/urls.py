@@ -5,7 +5,6 @@ from . import views
 
 urlpatterns = [
     # path('', views.connexion, name="connexion"),
-    path('', views.home, name="home"),
 
     
     # path('login', views.login_view, name="login"),
@@ -14,23 +13,22 @@ urlpatterns = [
     # path('logout', views.logout_view, name="logout"),
     
     
-    path('contacts', views.contacts_view, name="contacts"),
     # path('add_contact', views.add_contact_view, name="add_contact"),
     #path('add_liste_contact', views.add_liste_contact_view,name="add_liste_contact"),
 
-    # fonctions du iCal :
-    path('download_cal/<int:rdv_id>', views.download_cal , name="download_cal"),
+    
 
     # fonctions de la page 0 :
+    path('', views.home_view, name="home"),
     path('x_addRdv', views.x_addRdv, name="x_addRdv"),
-    path('x_getRdvs', views.x_getRdvs, name="x_getRdvs"),
+    path('x_getRdvs', views.x_get_my_rdvs, name="x_getRdvs"),
     path('htmx_updateParticipant/<int:id_participant>',
-         views.htmx_updateParticipant, name="htmx_updateParticipant"),
+         views.x_updateMyParticipation, name="htmx_updateParticipant"),
     path('htmx_getParticipants/<int:id_rdv>',
-         views.htmx_getParticipants, name="htmx_getParticipants"),
+         views.x_getParticipants, name="htmx_getParticipants"),
 
     # fonctions de la page 1 :
-    path('gerer_rdvs', views.gerer_rdvs, name="gerer_rdvs"),  # Secu OK
+    path('gerer_rdvs', views.gerer_rdvs_view, name="gerer_rdvs"),  # Secu OK
     path('x_get_rdvs', views.x_get_rdvs, name="x_get_rdvs"),  # Secu OK
     path('x_update_rdv/<int:id>', views.x_update_rdv, name="x_update_rdv"),
     path('deleteRdv/<int:rdv_id>', views.x_deleteRdv, name="x_deleteRdv"),
@@ -43,6 +41,7 @@ urlpatterns = [
     path('x_selectContacts/<int:rdv_id>', views.x_selectContacts, name="x_selectContacts"),
 
      # fonctions de la page Contacts :
+     path('contacts', views.contacts_view, name="contacts"),
      path('x_getContacts', views.x_getContacts, name="x_getContacts"),
      path('x_addContact', views.x_addContact, name="x_addContact"),
      path('x_updateContact/<int:contact_id>', views.x_updateContact, name="x_updateContact"),
@@ -53,6 +52,9 @@ urlpatterns = [
      path('x_updateListeContacts/<int:liste_id>', views.x_updateListeContacts, name="x_updateListeContacts"),
      path('x_deleteListeContacts/<int:liste_id>', views.x_deleteListeContacts, name="x_deleteListeContacts"),
 
+     # fonctions du iCal :
+    path('download_cal/<int:rdv_id>', views.download_cal , name="download_cal"),
+
 
     # vue des tests
     path('test', views.test, name="test"),
@@ -60,10 +62,6 @@ urlpatterns = [
     path('test_oob', views.test_oob, name="test_oob"),
     path('test_index', views.test_index, name="test_index"),
 
-    
-
-    # fonctions de la page Profil :
-    path('x_get_profil', views.x_get_profil, name="x_get_profil"),    
 
     # Vue des components
     path('rdv_template', views.rdv_template, name="rdv_template"),

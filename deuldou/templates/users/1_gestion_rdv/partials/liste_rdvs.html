@@ -34,7 +34,8 @@
                     </svg>
                 </button>
                 <button class="btn btn-people-add-custom" data-bs-toggle="modal" data-bs-target="#modalStatic"
-                    hx-get="{% url 'x_addParticipant' rdv.id %}" hx-target="#modalStatic">
+                    title="Ajouter un participant" hx-get="{% url 'x_addParticipant' rdv.id %}"
+                    hx-target="#modalStatic">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person-add" viewBox="0 0 16 16">
                         <path
@@ -44,8 +45,8 @@
                     </svg>
                 </button>
 
-                <button class="btn btn-settings-custom" data-bs-toggle="modal" data-bs-target="#modalStatic"
-                    hx-get="{% url 'x_update_rdv' rdv.id %}" hx-target="#modalStatic">
+                <button class="btn btn-settings-custom" title="Modifier le Rdv" data-bs-toggle="modal"
+                    data-bs-target="#modalStatic" hx-get="{% url 'x_update_rdv' rdv.id %}" hx-target="#modalStatic">
                     <svg xmlns=" http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-gear" viewBox="0 0 16 16">
                         <path
@@ -55,8 +56,8 @@
                     </svg>
                 </button>
 
-                <button type="button" class="btn btn-delete-custom" alt="supprimer" aria-label="Supprimer"
-                    data-bs-toggle="modal" data-bs-target="#modalConfirm"
+                <button type="button" class="btn btn-delete-custom" alt="supprimer" title="Supprimer le Rdv"
+                    aria-label="Supprimer" data-bs-toggle="modal" data-bs-target="#modalConfirm"
                     onclick="askModalDeleteRdv('Etes-vous sûr de vouloir supprimer ce Rendez-vous ?', '{{ rdv.id }}')">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

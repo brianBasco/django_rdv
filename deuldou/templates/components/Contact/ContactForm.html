@@ -1,9 +1,4 @@
-<h5 hx-swap-oob="outerHTML: #modalTitle" class="modal-title fs-5" id="modalTitle">Ajouter un contact</h5>
-{# Supprimer les boutons lors d'un formulaire vide #}
-<span hx-swap-oob="innerHTML:#modalFooterButtons"></span>
-
-
-<form hx-post="{% url 'x_addContact' %}">
+<form hx-post="{% url 'x_addContact' %}" hx-target="#modalStatic">
     {% csrf_token %}
     {% load widget_tweaks %}
 

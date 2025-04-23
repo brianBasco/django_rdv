@@ -126,4 +126,9 @@ Ajout des codes dans les Settings du projet Django
 ## A faire :
 
 App registration : fonctionnel (27/02/2025)
-Télécharger Calendrier par Rdv 
+Télécharger Calendrier par Rdv : fonctionnel
+Vérifier s'il y a bien popper.js acr le menu s'aligne hors de l'écran !
+Rajouter des logos/icones devant chaque bouton ou lien
+supprimer la partie modification de mot de passe dans page principale
+Changer suppression des contacts et Liste de contacts : passer par un modal static pour confirmer la suppression (plutôt que par le delete de Htmx).
+Prendre exemple sur la gestion des contacts pour le flux Modal, retour d'informations et changement de boutons

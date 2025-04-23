@@ -1,17 +1,15 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header" id="modalHeader">
-            <h5 class="modal-title">Ajouter un Rendez-vous</h5>
+            <h5 class="modal-title">Ajouter un contact</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modalBody">
-            {% include 'components/Rdv/RdvForm.html' %}
+            {% include 'components/Contact/ContactForm.html' %}
 
         </div>
-        {% comment %}
         <div class="modal-footer" id="modalFooter">
             <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Annuler</button>
         </div>
-        {% endcomment %}
     </div>
 </div>

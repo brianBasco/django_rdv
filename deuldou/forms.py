@@ -79,16 +79,15 @@ class ContactForm(forms.ModelForm):
         model = Contact
         fields = "__all__"
         widgets = {'user': forms.HiddenInput()}
-
+    """
     def clean_email(self):
         email = self.cleaned_data["email"]
         user  = self.cleaned_data["user"]
         if Contact.objects.filter(email=email, user=user).exists():
             raise ValidationError("{} est déjà enregistré dans vos contacts".format(email))
-        # Always return a value to use as the new cleaned data, even if
-        # this method didn't change it.
         return email
-
+    """
+    
 
 
 class ListeContactsForm(forms.ModelForm):

@@ -101,7 +101,7 @@ class Contact(models.Model):
     """
     Contraintes :
     - Un contact appartient à UN User et un user peut avoir des contacts et des listes de contacts
-    - Un User ne peut pas avoir 2 contacts avec la même adresse email
+    - Suppression de la contrainte : ne peut pas avoir 2 contacts avec la même adresse email
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contacts')
     email = models.EmailField(max_length=150, blank=False)
@@ -126,12 +126,12 @@ class Contact(models.Model):
         
     """
     Contrainte unique sur les clés USER et EMAIL    
-    """
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "email"], name='contact unique', violation_error_message="Ce contact existe déjà")
         ]
+    """
 
 
 class ListeContacts(models.Model):

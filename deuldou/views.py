@@ -283,42 +283,42 @@ def x_addContact(request: HttpRequest):
 
 @login_required
 def x_updateContact(request: HttpRequest, contact_id:int):
+    """
+    Update d'un Contact créé par le USER
+    Fonctionnel (au 23/04/2025)
+    """
     try:
         contact:Contact = Contact.get_for_user(pk=contact_id, user=request.user)
-    except ObjectDoesNotExist:
-        return render(request, "components/Contact/formInfos.html",  {'error':HttpResponse(ERREUR)})
-    except PermissionDenied:
-        return render(request, "components/Contact/formInfos.html",  {'error':HttpResponse(PERMISSION)})
+    except Exception as e:
+        return render(request, "components/Contact/UpdateContactSuccessModal.html",  {'error':HttpResponse(ERREUR)})
     else:
-        print(contact)
         form: ContactForm = ContactForm(instance=contact)
-        print(form)
         if request.method == "POST":
             form: ContactForm = ContactForm(request.POST, instance=contact)
             if form.is_valid():
                 form.save()
-                response = render(request, "components/Contact/formInfos.html",  {'success': 'Contact modifié'})
+                response = render(request, "components/Contact/UpdateContactSuccessModal.html",  {'success': 'Contact modifié'})
                 response.headers["HX-Trigger"] = "addContact"
                 return response
-        return render(request, "components/Contact/UpdateContactForm.html", {'form': form, 'contact_id': contact_id})
+        return render(request, "components/Contact/UpdateContactModal.html", {'form': form, 'contact_id': contact_id})
     
 
 @login_required
 def x_deleteContact(request: HttpRequest, contact_id: int):
     """
     Supprimme un Contact créé par le USER
-    Fonctionnel
+    Fonctionnel (au 23/04/2025)
     """
     if request.method == 'DELETE':
         try:
             contact: Contact = Contact.get_for_user(pk=contact_id, user=request.user)
         except ObjectDoesNotExist:
-            return HttpResponse(ERREUR)
-        except PermissionDenied:
-            return HttpResponse(PERMISSION)
-        else:
-            contact.delete()
-            return HttpResponse(status=200)
+            return HttpResponse("Contact non trouvé.", status=404)
+        except Exception:
+            return HttpResponse("Erreur serveur.", status=500)
+        
+        contact.delete()
+        return HttpResponse(status=200)  # Pas de contenu pour HTMX
 
 @login_required
 def x_addListeContacts(request: HttpRequest):
@@ -350,13 +350,13 @@ def x_deleteListeContacts(request: HttpRequest, liste_id: int):
     if request.method == 'DELETE':
         try:
             liste: ListeContacts = ListeContacts.get_for_user(pk=liste_id, user=request.user)
-        except PermissionDenied:
-            return HttpResponse(PERMISSION)
-        except:
-            return HttpResponse(ERREUR)
-        else:
-            liste.delete()
-            return HttpResponse(status=200)
+        except ObjectDoesNotExist:
+            return HttpResponse("Contact non trouvé.", status=404)
+        except Exception:
+            return HttpResponse("Erreur serveur.", status=500)
+        
+        liste.delete()
+        return HttpResponse(status=200)
 
 # ------------------- Vues de gestion des RDV  ---------------------
 

@@ -33,22 +33,37 @@
   <div class="tab-content" id="TabContent">
     <div class="tab-pane fade show active" id="contacts-tab-pane" role="tabpanel" aria-labelledby="contacts-tab"
       tabindex="0">
-      <div class="py-4">
-        <button hx-get="{% url 'x_addContact' %}" hx-target="#modalStatic" type="button"
-          class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
-          Ajouter contact +
-        </button>
+      <div class="row py-4">
+        <div class="col-auto">
+          <button hx-get="{% url 'x_addContact' %}" hx-target="#modalStatic" type="button"
+            class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
+            Ajouter contact +
+          </button>
+          <button hx-get="{% url 'x_getContacts' %}?tri=nom" hx-target="#liste_contacts" type="button"
+            class="btn btn-outline-dark btn-sm">
+            Trier par nom
+          </button>
+          <button hx-get="{% url 'x_getContacts' %}?tri=email" hx-target="#liste_contacts" type="button"
+            class="btn btn-outline-dark btn-sm">
+            Trier par email
+          </button>
+        </div>
+        <div class="col-auto">
+          <input type="text" class="form-control form-control-sm" name="recherche" placeholder="Recherche par nom..."
+            hx-get="{% url 'x_getContacts' %}" hx-trigger="keyup changed delay:300ms" hx-target="#liste_contacts"
+            hx-include="[name='recherche']" />
+        </div>
       </div>
-      <div>
 
+      <div>
         <div id="liste_contacts" class="py-4" hx-get="{% url 'x_getContacts' %}"
           hx-trigger="load, addContact from:body">
 
           {# Insertion de la liste des contacts après Load #}
 
         </div>
-
       </div>
+
     </div>
 
     {# Partie sur la LISTE de contacts #}
@@ -75,17 +90,13 @@
 
   </div>
 
+</div>
 
-  {% endblock content %}
+{% endblock content %}
 
-  {% block script %}
-  <script>
-    $(document).ready(function () {
-      // Détecter l'événement de fermeture du modal
-      $('#modalStatic').on('hidden.bs.modal', function () {
-        // Vider le contenu du modal
-        $(this).find('#modalFooterButtons').empty();
-      });
-    });
-  </script>
-  {% endblock script %}
+{% block script %}
+<script>
+
+
+</script>
+{% endblock script %}

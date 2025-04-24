@@ -94,7 +94,6 @@ Terminer Gestion utilisateur et mot de passe :
   - Ne pas accéder aux Participants des autres user (ajout, modification, suppression):
   - Ne pas accéder aux profils des autres user (ajout, modification, suppression):
   - Création de participants en double : Fait
-  - Checker création de contact en double pour un User : OK Fait
   - Ne pas ajouter un Participant sans rentrer une adresse mail valide : OK fait Fait en modificant le Model (EmailField)
   - Redéfinir en français les erreurs sur les formulaires :
 
@@ -127,8 +126,10 @@ Ajout des codes dans les Settings du projet Django
 
 App registration : fonctionnel (27/02/2025)
 Télécharger Calendrier par Rdv : fonctionnel
-Vérifier s'il y a bien popper.js acr le menu s'aligne hors de l'écran !
+Vérifier s'il y a bien popper.js car le menu s'aligne hors de l'écran !
 Rajouter des logos/icones devant chaque bouton ou lien
 supprimer la partie modification de mot de passe dans page principale
 Changer suppression des contacts et Liste de contacts : passer par un modal static pour confirmer la suppression (plutôt que par le delete de Htmx).
 Prendre exemple sur la gestion des contacts pour le flux Modal, retour d'informations et changement de boutons
+Ajouter dans toutes les pages Htmx : if not request.headers.get('HX-Request') == 'true':
+        raise Http404("Cette page n'est accessible que via HTMX.")

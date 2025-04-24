@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.forms import ValidationError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import Http404
 from django.views.generic import TemplateView
 from icalendar import Calendar, Event
 from ics import Calendar as Cal
@@ -240,7 +241,20 @@ def contacts_view(request: HttpRequest):
 
 @login_required
 def x_getContacts(request: HttpRequest):
-    contacts: list[Contact] = request.user.contacts.all().order_by('email')
+    """
+    La fonction permet de trier sur le nom ou sur l'email
+    La fonction permet de filtrer sur le nom
+    Par défaut la fonction renvoie tous les contacts classés par email (ordre alphabétique)
+    """
+    if not request.headers.get('HX-Request') == 'true':
+        raise Http404("Cette page n'est accessible que via HTMX.")
+    tri = request.GET.get('tri', 'email') # tri par email par défaut
+    contacts: list[Contact] = request.user.contacts.all().order_by(tri)
+    
+    recherche = request.GET.get('recherche', '')
+    if recherche:
+        contacts = contacts.filter(nom__icontains=recherche)
+    #contacts: list[Contact] = request.user.contacts.all().order_by('email')
     return render(request, "users/2_contacts/partials/liste_contacts.html", {'contacts': contacts})
 
 

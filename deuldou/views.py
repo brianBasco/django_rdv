@@ -22,7 +22,9 @@ from ics import Calendar as Cal
 from ics import Event as Ev
 from pwgen import pwgen
 
-from .forms import ContactForm, ListeContactsForm, ParticipantForm, RdvForm, SelectContactForm, UpdateParticipantForm
+from deuldou.utils.utils import htmx_required
+
+from .forms import ContactForm, ListeContactsForm, ParticipantForm, RdvForm, SelectContactForm, UpdateNomListeContactForm, UpdateParticipantForm
 from .models import Contact, Deuldou, ListeContacts, ListeContacts, Participant, Tag, User
 
 # ------------------- Paramètres de config -----------------------
@@ -138,6 +140,7 @@ def home_view(request: HttpRequest):
 
 
 @login_required
+@htmx_required
 def x_get_my_rdvs(request: HttpRequest):
     """
     Sécurité : OK
@@ -154,6 +157,7 @@ def x_get_my_rdvs(request: HttpRequest):
 
 
 @login_required
+@htmx_required
 def x_addRdv(request: HttpRequest):
     """ 
     Sécurité : OK
@@ -178,15 +182,14 @@ def x_addRdv(request: HttpRequest):
 
 
 @login_required
+@htmx_required
 def x_updateMyParticipation(request: HttpRequest, id_participant: int):
     """
     Sécurité : à tester !
     Retourne le Participant de ce RDV
     """
     try:
-        # participant = Participant.objects.get(pk=id_participant)
         participant: Participant = Participant.get_for_user(id_participant, request.user)
-        #participant: Participant = Participant.get_for_user(0, request.user)
     except:
         return render(request, 'components/Participant/UpdateParticipantModalInfos.html', {'error': ERREUR})
     form = UpdateParticipantForm(instance=participant)
@@ -204,6 +207,7 @@ def x_updateMyParticipation(request: HttpRequest, id_participant: int):
 
 
 @login_required
+@htmx_required
 def x_getParticipants(request: HttpRequest, id_rdv: int):
     """
     Sécurité : à tester !!
@@ -240,45 +244,25 @@ def contacts_view(request: HttpRequest):
 
 
 @login_required
+@htmx_required
 def x_getContacts(request: HttpRequest):
     """
     La fonction permet de trier sur le nom ou sur l'email
     La fonction permet de filtrer sur le nom
     Par défaut la fonction renvoie tous les contacts classés par email (ordre alphabétique)
     """
-    if not request.headers.get('HX-Request') == 'true':
-        raise Http404("Cette page n'est accessible que via HTMX.")
     tri = request.GET.get('tri', 'email') # tri par email par défaut
     contacts: list[Contact] = request.user.contacts.all().order_by(tri)
     
     recherche = request.GET.get('recherche', '')
     if recherche:
         contacts = contacts.filter(nom__icontains=recherche)
-    #contacts: list[Contact] = request.user.contacts.all().order_by('email')
+
     return render(request, "users/2_contacts/partials/liste_contacts.html", {'contacts': contacts})
 
 
-"""
 @login_required
-def add_liste_contact_view(request: HttpRequest):
-    if request.method == "POST":
-        form = Liste_contactsForm(request.POST)
-        if form.is_valid():
-            if form.cleaned_data["user"] != request.user:
-                raise PermissionDenied
-            form.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 "Nouvelle liste de contacts ajoutée")
-            return redirect('home')
-        else:
-            return render(request, "users/liste_contacts/add.html", {'form': form})
-
-    form = Liste_contactsForm(instance=Liste_contacts(user=request.user))
-    return render(request, "users/liste_contacts/add.html", {'form': form})
-"""
-
-
-@login_required
+@htmx_required
 def x_addContact(request: HttpRequest):
     """
     Ajoute un Contact à un User
@@ -296,6 +280,7 @@ def x_addContact(request: HttpRequest):
 
 
 @login_required
+@htmx_required
 def x_updateContact(request: HttpRequest, contact_id:int):
     """
     Update d'un Contact créé par le USER
@@ -318,6 +303,7 @@ def x_updateContact(request: HttpRequest, contact_id:int):
     
 
 @login_required
+@htmx_required
 def x_deleteContact(request: HttpRequest, contact_id: int):
     """
     Supprimme un Contact créé par le USER
@@ -335,27 +321,76 @@ def x_deleteContact(request: HttpRequest, contact_id: int):
         return HttpResponse(status=200)  # Pas de contenu pour HTMX
 
 @login_required
-def x_addListeContacts(request: HttpRequest):
+@htmx_required
+def x_addGroupeContacts(request: HttpRequest):
+    """
+    Fonction qui permet de créer un groupe de contacts
+    Fonctionnel au 26/04/2025
+    """
     form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
     if request.method == 'POST':
         form:ListeContactsForm = ListeContactsForm(request.POST)
-        print(form)
         if form.is_valid():
-            print('form is valid')
-            liste:ListeContacts = form.save()
-            return HttpResponse(liste.__str__())
-    return render(request, 'components/ListeContacts/form.html', {'form': form})
+            form.save()
+            response = render(request, 'components/ListeContacts/GroupeContactsSuccessModal.html', {'success': "Le groupe a été ajouté"})
+            response.headers["HX-Trigger"] = "updateGroupesContacts"
+            return response
+    return render(request, 'components/ListeContacts/GroupeContactsModal.html', {'form': form})
 
 @login_required
+@htmx_required
 def x_getListesContacts(request:HttpRequest):
-    listes: ListeContacts = request.user.get_listes_contacts.all()
+    """
+    Fonction qui retourne toutes les listes d'un utilisateur, classées par nom
+    """
+    listes: ListeContacts = request.user.get_listes_contacts.all().order_by("nom")
+
+    recherche = request.GET.get('recherche_liste', '')
+    print(recherche)
+    if recherche:
+        listes = listes.filter(nom__icontains=recherche)
+
     return render(request, '{}/partials/liste_ListeContacts.html'.format(CONTACTS), {'listes': listes} )
 
 @login_required
-def x_updateListeContacts(request: HttpRequest):
-    ...
+@htmx_required
+def x_getGroupeContacts(request:HttpRequest, groupe_id:int):
+    """
+    Fonction qui retourne un groupe de contact
+    Fonctionnel au 26/04/2025
+    """
+    try:
+        groupe: ListeContacts = ListeContacts.get_for_user(pk=groupe_id, user=request.user)
+    except Exception:
+        return HttpResponse(ERREUR, status=404)
+    
+    return render(request, '{}/partials/groupe_contacts/groupe_contacts.html'.format(CONTACTS), {'liste': groupe} )
 
 @login_required
+@htmx_required
+def x_updateListeContacts(request: HttpRequest, liste_id: int):
+    """
+    La fonction permet de modifier le noml de la liste de contacts
+    Le formulaire contient les bouton pour ajouter des contacts ou en supprimer
+    La gestion des contacts de la liste se fera dans un autre formulaire
+    """
+    try:
+        liste:ListeContacts = ListeContacts.get_for_user(pk=liste_id, user=request.user)
+    except:
+        return render(request, "components/ListeContacts/UpdateSuccessModal.html",  {'error': "Une erreur est survenue"})
+    form: UpdateNomListeContactForm = UpdateNomListeContactForm(instance=liste)
+    if request.method == "POST":
+        form: UpdateNomListeContactForm = UpdateNomListeContactForm(request.POST, instance=liste)
+        if form.is_valid():
+            form.save()
+            response = render(request, "components/ListeContacts/UpdateSuccessModal.html",  {'success': 'Le nom a été modifié'})
+            #response.headers["HX-Trigger"] = "updateListeContacts"
+            response.headers["HX-Trigger"] = "updateGroupeContacts_" + str(liste_id)
+            return response
+    return render(request, "components/ListeContacts/UpdateListeContactsModal.html", {'form': form, 'liste_id': liste_id})
+
+@login_required
+@htmx_required
 def x_deleteListeContacts(request: HttpRequest, liste_id: int):
     """
     Supprimme une Liste de Contacts créée par le USER
@@ -385,6 +420,7 @@ def gerer_rdvs_view(request: HttpRequest):
 
 
 @login_required
+@htmx_required
 def x_get_rdvs(request: HttpRequest):
     """
     Sécurité: OK
@@ -400,6 +436,7 @@ def x_get_rdvs(request: HttpRequest):
 
 
 @login_required
+@htmx_required
 def x_update_rdv(request: HttpRequest, id: int):
     """
     Sécurité : à tester
@@ -427,6 +464,7 @@ def x_update_rdv(request: HttpRequest, id: int):
 
 
 @login_required
+@htmx_required
 def x_deleteRdv(request: HttpRequest, rdv_id: int):
     """
     Sécurité : à tester
@@ -451,11 +489,10 @@ def x_deleteRdv(request: HttpRequest, rdv_id: int):
         return render(request, 'users/1_gestion_rdv/partials/modalConfirmInfos.html', context)
 
 
-# Méthode à reprendre
 @login_required
+@htmx_required
 def x_gestion_getParticipants(request: HttpRequest, rdv_id: int):
     '''
-    Sécurité : à tester
     retourne la liste des participants à un Rdv créé par le USER \n,
     Fonctionnel
     '''
@@ -470,6 +507,7 @@ def x_gestion_getParticipants(request: HttpRequest, rdv_id: int):
 
 
 @login_required
+@htmx_required
 def x_deleteParticipant(request: HttpRequest, id: int):
     '''
     Supprime le participant d'un Rdv, avec méthode DELETE \n
@@ -504,6 +542,7 @@ def x_deleteParticipant(request: HttpRequest, id: int):
 
 
 @login_required
+@htmx_required
 def x_addParticipant(request: HttpRequest, rdv_id: int):
     """
     Ajoute un participant à un RDV créé par le USER
@@ -538,6 +577,7 @@ def x_addParticipant(request: HttpRequest, rdv_id: int):
 
 
 @login_required
+@htmx_required
 def x_selectContacts(request: HttpRequest, rdv_id:int):
     """
     Retourne la liste des contacts sans ceux déjà inscrits au RDV \n

@@ -47,8 +47,9 @@ urlpatterns = [
      path('x_updateContact/<int:contact_id>', views.x_updateContact, name="x_updateContact"),
      path('x_deleteContact/<int:contact_id>', views.x_deleteContact, name="x_deleteContact"),
      ### Partie Listes de contacts :
-     path('x_addListeContacts', views.x_addListeContacts, name="x_addListeContacts"),
+     path('x_addGroupeContacts', views.x_addGroupeContacts, name="x_addGroupeContacts"),
      path('x_getListesContacts', views.x_getListesContacts, name="x_getListesContacts"),
+     path('x_getGroupeContacts/<int:groupe_id>', views.x_getGroupeContacts, name="x_getGroupeContacts"),
      path('x_updateListeContacts/<int:liste_id>', views.x_updateListeContacts, name="x_updateListeContacts"),
      path('x_deleteListeContacts/<int:liste_id>', views.x_deleteListeContacts, name="x_deleteListeContacts"),
 

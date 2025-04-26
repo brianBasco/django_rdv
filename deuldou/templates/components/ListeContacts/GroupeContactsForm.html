@@ -1,6 +1,5 @@
-<h5 hx-swap-oob="outerHTML: #modalTitle" class="modal-title fs-5" id="modalTitle">Ajouter une liste de contacts</h5>
-
-<form hx-post="{% url 'x_addListeContacts' %}">
+<form hx-post="{% url 'x_addGroupeContacts' %}" hx-target="#modalStatic">
+    {% load widget_tweaks %}
     {% csrf_token %}
 
     {{ form.user }}

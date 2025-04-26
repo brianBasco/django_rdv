@@ -50,8 +50,7 @@
         </div>
         <div class="col-auto">
           <input type="text" class="form-control form-control-sm" name="recherche" placeholder="Recherche par nom..."
-            hx-get="{% url 'x_getContacts' %}" hx-trigger="keyup changed delay:300ms" hx-target="#liste_contacts"
-            hx-include="[name='recherche']" />
+            hx-get="{% url 'x_getContacts' %}" hx-trigger="keyup changed delay:300ms" hx-target="#liste_contacts" />
         </div>
       </div>
 
@@ -66,21 +65,29 @@
 
     </div>
 
-    {# Partie sur la LISTE de contacts #}
+    {# Partie sur les groupes de contacts #}
 
     <div class="tab-pane fade" id="liste-tab-pane" role="tabpanel" aria-labelledby="liste-tab" tabindex="0">
 
-      <div class="py-4">
-        <button hx-get="{% url 'x_addListeContacts' %}" hx-target="#modalBody" type="button"
-          class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
-          Ajouter une liste de Contacts
-        </button>
+      <div class="row py-4">
+        <div class="col-auto">
+          <button hx-get="{% url 'x_addGroupeContacts' %}" hx-target="#modalStatic" type="button"
+            class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic">
+            Ajouter un groupe de Contacts
+          </button>
+        </div>
+        <div class="col-auto">
+          <input type="text" class="form-control form-control-sm" name="recherche_liste"
+            placeholder="Recherche par nom..." hx-get="{% url 'x_getListesContacts' %}"
+            hx-trigger="keyup changed delay:300ms" hx-target="#liste_listeContacts" />
+        </div>
       </div>
+
       <div>
+        <div id="liste_listeContacts" class="py-4" hx-get="{% url 'x_getListesContacts' %}"
+          hx-trigger="updateGroupesContacts from:body">
 
-        <div id="liste_listeContacts" class="py-4">
-
-          {# Insertion de la liste des contacts après Load #}
+          {# Insertion des groupes de contacts après Load #}
 
         </div>
       </div>

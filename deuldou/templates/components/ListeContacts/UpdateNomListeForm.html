@@ -1,0 +1,37 @@
+<form hx-post="{% url 'x_updateListeContacts' liste_id %}" hx-target="#modalStatic">
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+    {{ form.user }}
+
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error | escape }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="container">
+
+        <div class="mt-2">
+            {{ form.nom|add_class:"form-control"|attr:"placeholder:nom"|attr:"required"}}
+            {% for error in form.nom.errors %}
+            <div class="mt-1 alert alert-danger d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>
+                    {{ error }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+
+    </div>
+
+</form>

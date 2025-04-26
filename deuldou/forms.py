@@ -97,6 +97,18 @@ class ListeContactsForm(forms.ModelForm):
         widgets = {'user': forms.HiddenInput(), 'contacts': forms.CheckboxSelectMultiple(attrs={'required': False}), 'nom': forms.TextInput(attrs={'class': "form-control"})}
 
 
+class UpdateNomListeContactForm(forms.ModelForm):
+    class Meta:
+        model = ListeContacts
+        fields = ['nom']
+        widgets = {'nom': forms.TextInput(attrs={'class': "form-control"})}
+        error_messages = {
+            "nom": {
+                "required": _("Un nom est obligatoire"),
+            },
+        }
+
+
 class SelectContactForm(forms.Form):
     #class Meta(ContactForm.Meta):
     #   widgets = {'user': forms.HiddenInput(),'email': forms.HiddenInput()}

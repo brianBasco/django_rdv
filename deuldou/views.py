@@ -370,7 +370,7 @@ def x_getGroupeContacts(request:HttpRequest, groupe_id:int):
 @htmx_required
 def x_updateListeContacts(request: HttpRequest, liste_id: int):
     """
-    La fonction permet de modifier le noml de la liste de contacts
+    La fonction permet de modifier le nom de la liste de contacts
     Le formulaire contient les bouton pour ajouter des contacts ou en supprimer
     La gestion des contacts de la liste se fera dans un autre formulaire
     """
@@ -406,6 +406,39 @@ def x_deleteListeContacts(request: HttpRequest, liste_id: int):
 
         liste.delete()
         return HttpResponse(status=200)
+
+
+@login_required
+@htmx_required
+def x_addContactsToGroupe(request: HttpRequest, liste_id:int):
+    """
+    Fonction qui permet d'ajouter des contacts à un groupe de contacts
+    Non Fonctionnel au 28/04/2025 ?
+    Il faut exclure les contacts appartenant déjà au groupe dans l'ajout
+    Question à Chatgpt -> Etendre un formulaire, c'est possible, extends ListeContactsForm sans le user ni le nom ?
+    """
+    try:
+        ListeContacts.get_for_user(pk=liste_id, user=request.user)
+    except Exception:
+        return HttpResponse(ERREUR, status=404)
+    
+    # On récupère les contacts de l'utilisateur qui ne sont pas déjà dans la liste
+    contacts = request.user.contacts.exclude(listecontacts=liste_id)
+
+    form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
+    
+    if request.method == "POST":
+        form:ListeContactsForm = ListeContactsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            response = render(request, 'components/ListeContacts/GroupeContactsSuccessModal.html', {'success':"Les contacts ont été ajoutés au groupe"}) 
+            response['HX-Trigger'] = 'updateGroupeContacts_' + str(liste_id)
+            return response
+    context = {}
+    context['groupe_id'] = liste_id
+    context['form'] = form
+    return render(request, 'components/ListeContacts/updateContacts/AddContactsModal.html',context=context)
+
 
 # ------------------- Vues de gestion des RDV  ---------------------
 

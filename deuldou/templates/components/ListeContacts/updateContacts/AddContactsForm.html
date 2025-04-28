@@ -1,0 +1,18 @@
+<form hx-post="{% url 'x_addContactsToGroupe' groupe_id %}" hx-target="#modalStatic">
+    {% load widget_tweaks %}
+    {% csrf_token %}
+
+    {{ form.user }}
+
+    <div class="mb-3">
+        <label class="form-label">Ajoutez vos contacts :</label>
+
+        <div class="form-check">
+            {{ form.contacts }}
+        </div>
+    </div>
+
+
+
+    <input class="btn btn-primary" type="submit" value="Enregistrer">
+</form>

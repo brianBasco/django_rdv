@@ -52,6 +52,7 @@ urlpatterns = [
      path('x_getGroupeContacts/<int:groupe_id>', views.x_getGroupeContacts, name="x_getGroupeContacts"),
      path('x_updateListeContacts/<int:liste_id>', views.x_updateListeContacts, name="x_updateListeContacts"),
      path('x_deleteListeContacts/<int:liste_id>', views.x_deleteListeContacts, name="x_deleteListeContacts"),
+     path('x_addContactsToGroupe/<int:liste_id>', views.x_addContactsToGroupe, name="x_addContactsToGroupe"),
 
      # fonctions du iCal :
     path('download_cal/<int:rdv_id>', views.download_cal , name="download_cal"),

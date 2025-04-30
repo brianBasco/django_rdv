@@ -327,9 +327,10 @@ def x_addGroupeContacts(request: HttpRequest):
     Fonction qui permet de créer un groupe de contacts
     Fonctionnel au 26/04/2025
     """
-    form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
+    #form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
+    form:ListeContactsForm = ListeContactsForm(user=request.user)
     if request.method == 'POST':
-        form:ListeContactsForm = ListeContactsForm(request.POST)
+        form:ListeContactsForm = ListeContactsForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
             response = render(request, 'components/ListeContacts/GroupeContactsSuccessModal.html', {'success': "Le groupe a été ajouté"})
@@ -378,13 +379,12 @@ def x_updateListeContacts(request: HttpRequest, liste_id: int):
         liste:ListeContacts = ListeContacts.get_for_user(pk=liste_id, user=request.user)
     except:
         return render(request, "components/ListeContacts/UpdateSuccessModal.html",  {'error': "Une erreur est survenue"})
-    form: UpdateNomListeContactForm = UpdateNomListeContactForm(instance=liste)
+    form: UpdateNomListeContactForm = UpdateNomListeContactForm(instance=liste, user=request.user)
     if request.method == "POST":
-        form: UpdateNomListeContactForm = UpdateNomListeContactForm(request.POST, instance=liste)
+        form: UpdateNomListeContactForm = UpdateNomListeContactForm(request.POST, instance=liste, user=request.user)
         if form.is_valid():
             form.save()
             response = render(request, "components/ListeContacts/UpdateSuccessModal.html",  {'success': 'Le nom a été modifié'})
-            #response.headers["HX-Trigger"] = "updateListeContacts"
             response.headers["HX-Trigger"] = "updateGroupeContacts_" + str(liste_id)
             return response
     return render(request, "components/ListeContacts/UpdateListeContactsModal.html", {'form': form, 'liste_id': liste_id})
@@ -425,10 +425,10 @@ def x_addContactsToGroupe(request: HttpRequest, liste_id:int):
     # On récupère les contacts de l'utilisateur qui ne sont pas déjà dans la liste
     contacts = request.user.contacts.exclude(listecontacts=liste_id)
 
-    form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
+    #form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
     
     if request.method == "POST":
-        form:ListeContactsForm = ListeContactsForm(request.POST)
+        #form:ListeContactsForm = ListeContactsForm(request.POST)
         if form.is_valid():
             form.save()
             response = render(request, 'components/ListeContacts/GroupeContactsSuccessModal.html', {'success':"Les contacts ont été ajoutés au groupe"}) 

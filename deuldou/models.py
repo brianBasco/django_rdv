@@ -142,8 +142,8 @@ class ListeContacts(models.Model):
     - unique pour : USER et NOM
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='get_listes_contacts')
-    nom = models.CharField(max_length=100, blank=False, null=False)
-    contacts = models.ManyToManyField(Contact)
+    nom = models.CharField(max_length=100)
+    contacts = models.ManyToManyField(Contact, blank=True)
 
     class Meta:
         ordering = ['nom']

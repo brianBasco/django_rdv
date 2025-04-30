@@ -22,21 +22,6 @@ class RdvForm(forms.ModelForm):
         if debut is None :
             cleaned_data["heure_debut"] = '00:00'
 
-"""
-class UpdateRdvForm(RdvForm):
-    class Meta:
-        exclude = [""]
-        fields = ['nom','jour','heure_debut','heure_fin','lieu']
-"""
-
-    
-    
-"""
-class Add_Participant_Form(forms.Form):
-    email = forms.EmailField(max_length=100)
-    nom = forms.CharField(max_length=100)
-    statut= forms.CharField(max_length=2,widget=forms.Select(choices=Participant.STATUTS_CHOICES))
-"""
 
 
 class ParticipantForm(forms.ModelForm):
@@ -74,47 +59,102 @@ class UpdateParticipantForm(ParticipantForm):
         fields = ["nom","statut"]
 
 
+class SelectContactForm(forms.Form):
+    """
+    Formulaire pour ajouter des Contacts comme participants à un rendez-vous
+    """
+    email = forms.EmailField(widget=forms.HiddenInput())
+    nom = forms.CharField(widget=forms.HiddenInput())#label=""
+    is_checked = forms.BooleanField(required=False, initial=False,label="")
+
+    is_checked.widget.attrs.update({"class": "form-check-input form-check-input-perso"})
+
+
+# -------------- Formulaire pour la gestion des contacts --------------
+
 class ContactForm(forms.ModelForm):
+    """
+    Formulaire de création d'un contact
+    au 30/04/2025 : à améliorer : Supprimer le widget user et passer le paramètre user à l'instanciation (comme pour les listes de contacts)
+    """
     class Meta:
         model = Contact
         fields = "__all__"
         widgets = {'user': forms.HiddenInput()}
-    """
-    def clean_email(self):
-        email = self.cleaned_data["email"]
-        user  = self.cleaned_data["user"]
-        if Contact.objects.filter(email=email, user=user).exists():
-            raise ValidationError("{} est déjà enregistré dans vos contacts".format(email))
-        return email
-    """
     
-
+    
+# -------------- Formulaire pour le groupe de contacts --------------
+# permet de créer un groupe de contacts
+# permet de modifier le nom du groupe de contacts
+# permet d'ajouter des contacts du user
+# permet de supprimer des contacts du user
 
 class ListeContactsForm(forms.ModelForm):
+    """
+    Formulaire de création d'un groupe de contacts
+    Attribut obligatoire à passer à l'instanciation : user
+    Contrainte de nom unique pour un utilisateur
+    """
     class Meta:
         model = ListeContacts
-        fields= ['user','nom','contacts']
-        widgets = {'user': forms.HiddenInput(), 'contacts': forms.CheckboxSelectMultiple(attrs={'required': False}), 'nom': forms.TextInput(attrs={'class': "form-control"})}
-
-
-class UpdateNomListeContactForm(forms.ModelForm):
-    class Meta:
-        model = ListeContacts
-        fields = ['nom']
-        widgets = {'nom': forms.TextInput(attrs={'class': "form-control"})}
+        fields= ['nom','contacts']
+        widgets = {'contacts': forms.CheckboxSelectMultiple(attrs={'required': False}), 'nom': forms.TextInput(attrs={'class': "form-control"})}
         error_messages = {
             "nom": {
                 "required": _("Un nom est obligatoire"),
             },
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Récupère l’utilisateur passé depuis la vue
+        super().__init__(*args, **kwargs)
+        self.user = user  # Stocke l’utilisateur dans l’instance du formulaire
+         # Ne tente de modifier le queryset que si le champ 'contacts' est présent dans le formulaire
+        if 'contacts' in self.fields:
+            if user:
+                self.fields['contacts'].queryset = Contact.objects.filter(user=user)
+            else:
+                raise Exception("Le paramètre user doit être spécifié à l'initialisation du formulaire")
+    
+    def clean_nom(self):
+        nom = self.cleaned_data["nom"]
+        if ListeContacts.objects.filter(nom=nom, user=self.user).exists():
+            raise ValidationError("{} : Ce nom existe déjà !".format(nom))
+        return nom
+    
 
-class SelectContactForm(forms.Form):
-    #class Meta(ContactForm.Meta):
-    #   widgets = {'user': forms.HiddenInput(),'email': forms.HiddenInput()}
-    email = forms.EmailField(widget=forms.HiddenInput())
-    nom = forms.CharField(widget=forms.HiddenInput())#label=""
-    is_checked = forms.BooleanField(required=False, initial=False,label="")
 
-    is_checked.widget.attrs.update({"class": "form-check-input form-check-input-perso"})
-    #nom.widget.attrs.update({"class": "form-control-plaintext"})
+class UpdateNomListeContactForm(ListeContactsForm):
+    """
+    Formulaire dérivé pour modifier uniquement le nom d'une liste de contacts.
+    Attribut obligatoire à passer à l'instanciation : user
+    """
+
+    class Meta(ListeContactsForm.Meta):
+        fields = ['nom']  # On limite le champ éditable à 'nom'
+
+
+
+class AjouterContactsForm(forms.ModelForm):
+    """
+    Formulaire pour ajouter des contacts à une liste existante.
+    Seuls les contacts de l'utilisateur qui ne sont pas déjà dans la liste sont proposés.
+    """
+    class Meta:
+        model = ListeContacts
+        fields = ['contacts']
+        widgets = {
+            'contacts': forms.CheckboxSelectMultiple(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        liste = kwargs.pop('liste', None)  # la liste à laquelle on veut ajouter des contacts
+        super().__init__(*args, **kwargs)
+        self.fields['contacts'].required = False
+
+        if user and liste:
+            contacts_exclus = liste.contacts.all()
+            self.fields['contacts'].queryset = Contact.objects.filter(user=user).exclude(id__in=contacts_exclus)
+        else:
+            self.fields['contacts'].queryset = Contact.objects.none()

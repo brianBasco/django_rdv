@@ -2,7 +2,6 @@
     {% csrf_token %}
     {% load widget_tweaks %}
 
-    {{ form.user }}
 
     {% if form.non_field_errors %}
     {% for error in form.non_field_errors %}

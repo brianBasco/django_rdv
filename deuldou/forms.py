@@ -98,7 +98,7 @@ class ListeContactsForm(forms.ModelForm):
     class Meta:
         model = ListeContacts
         fields= ['nom','contacts']
-        widgets = {'contacts': forms.CheckboxSelectMultiple(attrs={'required': False}), 'nom': forms.TextInput(attrs={'class': "form-control"})}
+        widgets = {'contacts': forms.CheckboxSelectMultiple(), 'nom': forms.TextInput(attrs={'class': "form-control",'placeholder': "Nom du groupe"})}
         error_messages = {
             "nom": {
                 "required": _("Un nom est obligatoire"),
@@ -110,11 +110,11 @@ class ListeContactsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.user = user  # Stocke l’utilisateur dans l’instance du formulaire
          # Ne tente de modifier le queryset que si le champ 'contacts' est présent dans le formulaire
+        if not user:
+            raise Exception("Le paramètre user doit être spécifié à l'initialisation du formulaire")
         if 'contacts' in self.fields:
-            if user:
+                self.fields['contacts'].required = False
                 self.fields['contacts'].queryset = Contact.objects.filter(user=user)
-            else:
-                raise Exception("Le paramètre user doit être spécifié à l'initialisation du formulaire")
     
     def clean_nom(self):
         nom = self.cleaned_data["nom"]
@@ -127,7 +127,7 @@ class ListeContactsForm(forms.ModelForm):
 class UpdateNomListeContactForm(ListeContactsForm):
     """
     Formulaire dérivé pour modifier uniquement le nom d'une liste de contacts.
-    Attribut obligatoire à passer à l'instanciation : user
+    Attribut obligatoire à passer à l'instanciation : user (pour la contrainte d'unicité)
     """
 
     class Meta(ListeContactsForm.Meta):

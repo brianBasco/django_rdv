@@ -327,11 +327,11 @@ def x_addGroupeContacts(request: HttpRequest):
     Fonction qui permet de créer un groupe de contacts
     Fonctionnel au 26/04/2025
     """
-    #form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
     form:ListeContactsForm = ListeContactsForm(user=request.user)
     if request.method == 'POST':
         form:ListeContactsForm = ListeContactsForm(request.POST, user=request.user)
         if form.is_valid():
+            form.instance.user = request.user
             form.save()
             response = render(request, 'components/ListeContacts/GroupeContactsSuccessModal.html', {'success': "Le groupe a été ajouté"})
             response.headers["HX-Trigger"] = "updateGroupesContacts"

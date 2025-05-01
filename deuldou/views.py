@@ -24,7 +24,7 @@ from pwgen import pwgen
 
 from deuldou.utils.utils import htmx_required
 
-from .forms import ContactForm, ListeContactsForm, ParticipantForm, RdvForm, SelectContactForm, UpdateNomListeContactForm, UpdateParticipantForm
+from .forms import AjouterContactsForm, ContactForm, DeleteContactsForm, ListeContactsForm, ParticipantForm, RdvForm, SelectContactForm, UpdateNomListeContactForm, UpdateParticipantForm
 from .models import Contact, Deuldou, ListeContacts, ListeContacts, Participant, Tag, User
 
 # ------------------- Paramètres de config -----------------------
@@ -384,10 +384,10 @@ def x_updateListeContacts(request: HttpRequest, liste_id: int):
         form: UpdateNomListeContactForm = UpdateNomListeContactForm(request.POST, instance=liste, user=request.user)
         if form.is_valid():
             form.save()
-            response = render(request, "components/ListeContacts/UpdateSuccessModal.html",  {'success': 'Le nom a été modifié'})
+            response = render(request, "components/ListeContacts/updateNom/UpdateSuccessModal.html",  {'success': 'Le nom a été modifié'})
             response.headers["HX-Trigger"] = "updateGroupeContacts_" + str(liste_id)
             return response
-    return render(request, "components/ListeContacts/UpdateListeContactsModal.html", {'form': form, 'liste_id': liste_id})
+    return render(request, "components/ListeContacts/updateNom/UpdateListeContactsModal.html", {'form': form, 'liste_id': liste_id})
 
 @login_required
 @htmx_required
@@ -413,31 +413,62 @@ def x_deleteListeContacts(request: HttpRequest, liste_id: int):
 def x_addContactsToGroupe(request: HttpRequest, liste_id:int):
     """
     Fonction qui permet d'ajouter des contacts à un groupe de contacts
-    Non Fonctionnel au 28/04/2025 ?
-    Il faut exclure les contacts appartenant déjà au groupe dans l'ajout
-    Question à Chatgpt -> Etendre un formulaire, c'est possible, extends ListeContactsForm sans le user ni le nom ?
+    Fonctionnel au 01/05/2025
     """
     try:
-        ListeContacts.get_for_user(pk=liste_id, user=request.user)
+        liste=ListeContacts.get_for_user(pk=liste_id, user=request.user)
     except Exception:
         return HttpResponse(ERREUR, status=404)
     
-    # On récupère les contacts de l'utilisateur qui ne sont pas déjà dans la liste
-    contacts = request.user.contacts.exclude(listecontacts=liste_id)
-
-    #form:ListeContactsForm = ListeContactsForm(initial={'user': request.user})
+    form:AjouterContactsForm = AjouterContactsForm(user=request.user, liste=liste)
     
     if request.method == "POST":
-        #form:ListeContactsForm = ListeContactsForm(request.POST)
+        form:AjouterContactsForm = AjouterContactsForm(request.POST,user=request.user, liste=liste)
         if form.is_valid():
             form.save()
-            response = render(request, 'components/ListeContacts/GroupeContactsSuccessModal.html', {'success':"Les contacts ont été ajoutés au groupe"}) 
+            response = render(request, 'components/ListeContacts/addContacts/AddContactsSuccessModal.html', {'success':"Les contacts ont été ajoutés au groupe"}) 
             response['HX-Trigger'] = 'updateGroupeContacts_' + str(liste_id)
             return response
     context = {}
     context['groupe_id'] = liste_id
     context['form'] = form
-    return render(request, 'components/ListeContacts/updateContacts/AddContactsModal.html',context=context)
+    return render(request, 'components/ListeContacts/addContacts/AddContactsModal.html',context=context)
+
+
+
+@login_required
+@htmx_required
+def x_deleteContactsFromGroupe(request: HttpRequest, liste_id:int):
+    """
+    Fonction qui permet de supprimer des contacts à un groupe de contacts
+    Fonctionnel au 01/05/2025
+    """
+    try:
+        liste=ListeContacts.get_for_user(pk=liste_id, user=request.user)
+    except Exception:
+        return HttpResponse(ERREUR, status=404)
+    
+    form:DeleteContactsForm = DeleteContactsForm(user=request.user, liste=liste)
+    context = {}
+    context['groupe_id'] = liste_id
+    context['form'] = form
+    
+    if request.method == "POST":
+        form:DeleteContactsForm = DeleteContactsForm(request.POST, user=request.user, liste=liste)
+        if form.is_valid():
+            # Vérification s'il y a des contacts à supprimer (si l'utilisateur a sélectionné des Contacts)
+            contacts_a_supprimer = form.cleaned_data.get('contacts')
+            if contacts_a_supprimer:
+                form.save()
+                response = render(request, 'components/ListeContacts/deleteContacts/DeleteContactsSuccessModal.html', {'success':"Les contacts ont été supprimés du groupe"}) 
+                response['HX-Trigger'] = 'updateGroupeContacts_' + str(liste_id)
+                return response
+            else:
+                context['error'] = "Aucun contact n'a été sélectionné !"
+    # GET :    
+    return render(request, 'components/ListeContacts/deleteContacts/DeleteContactsModal.html',context=context)
+
+
 
 
 # ------------------- Vues de gestion des RDV  ---------------------

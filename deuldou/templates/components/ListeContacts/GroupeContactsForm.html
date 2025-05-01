@@ -6,6 +6,16 @@
     <div class="mb-3">
         <label for="nom_liste" class="form-label">Nom du groupe</label>
         {{ form.nom }}
+        {% for error in form.nom.errors %}
+        <div class="mt-1 alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>
+                {{ error }}
+            </div>
+        </div>
+        {% endfor %}
     </div>
 
     <div class="mb-3">

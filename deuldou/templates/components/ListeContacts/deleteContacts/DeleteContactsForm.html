@@ -1,0 +1,22 @@
+<form hx-post="{% url 'x_deleteContactsFromGroupe' groupe_id %}" hx-target="#modalStatic">
+    {% load widget_tweaks %}
+    {% csrf_token %}
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="mb-3">
+        <label class="form-label">Sélectionnez les contacts à supprimer du groupe :</label>
+
+        <div class="form-check">
+            {{ form.contacts }}
+        </div>
+    </div>
+
+
+
+    <input class="btn btn-primary" type="submit" value="Supprimer">
+</form>

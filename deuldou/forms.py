@@ -148,13 +148,58 @@ class AjouterContactsForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        liste = kwargs.pop('liste', None)  # la liste à laquelle on veut ajouter des contacts
+        self.user = kwargs.pop('user', None)
+        self.liste = kwargs.pop('liste', None)
         super().__init__(*args, **kwargs)
         self.fields['contacts'].required = False
 
-        if user and liste:
-            contacts_exclus = liste.contacts.all()
-            self.fields['contacts'].queryset = Contact.objects.filter(user=user).exclude(id__in=contacts_exclus)
-        else:
-            self.fields['contacts'].queryset = Contact.objects.none()
+        if not self.user:
+            raise Exception("Le paramètre user doit être spécifié à l'initialisation du formulaire")
+        
+        if not self.liste:
+            raise Exception("Le paramètre liste doit être spécifié à l'initialisation du formulaire")
+
+        contacts_exclus = self.liste.contacts.all()
+        self.fields['contacts'].queryset = Contact.objects.filter(user=self.user).exclude(id__in=contacts_exclus)
+
+    def save(self):
+        # Ne pas appeler super().save() pour éviter de modifier les relations existantes
+        contacts_ajoutes = self.cleaned_data.get('contacts')
+        if self.liste and contacts_ajoutes:
+            self.liste.contacts.add(*contacts_ajoutes)
+        return self.liste
+    
+class DeleteContactsForm(forms.ModelForm):
+    """
+    Formulaire pour supprimer des contacts à une liste existante.
+    Seuls les contacts de l'utilisateur sont proposés.
+    Les paramètres user et liste sont obligatoires à l'initialisation du formulaire.
+    """
+    class Meta:
+        model = ListeContacts
+        fields = ['contacts']
+        widgets = {
+            'contacts': forms.CheckboxSelectMultiple(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.liste = kwargs.pop('liste', None)
+        super().__init__(*args, **kwargs)
+        #self.fields['contacts'].required = False
+
+        if not self.user:
+            raise Exception("Le paramètre user doit être spécifié à l'initialisation du formulaire")
+        
+        if not self.liste:
+            raise Exception("Le paramètre liste doit être spécifié à l'initialisation du formulaire")
+
+        # Pour rester cohérent, le formulaire de suppression montre uniquement les contacts de l’utilisateur courant présents dans la liste.
+        self.fields['contacts'].queryset = self.liste.contacts.filter(user=self.user)
+
+    def save(self):
+        # Ne pas appeler super().save() pour éviter de modifier les relations existantes
+        contacts_supprimes = self.cleaned_data.get('contacts')
+        if self.liste and contacts_supprimes:
+            self.liste.contacts.remove(*contacts_supprimes)
+        return self.liste

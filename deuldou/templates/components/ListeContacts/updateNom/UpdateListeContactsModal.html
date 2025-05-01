@@ -5,13 +5,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modalBody">
-            {% include 'components/ListeContacts/UpdateNomListeForm.html' %}
+            {% include 'components/ListeContacts/updateNom/UpdateNomListeForm.html' %}
         </div>
         <div class="modal-footer" id="modalFooter">
             <button type="button" class="btn" hx-get="{% url 'x_addContactsToGroupe' liste_id %}"
                 hx-target="#modalStatic">Ajouter des
                 contacts...</button>
-            <button type="button" class="btn">Supprimer des contacts...</button>
+            <button type="button" class="btn" hx-get="{% url 'x_deleteContactsFromGroupe' liste_id %}"
+                hx-target="#modalStatic">Supprimer des contacts...</button>
         </div>
     </div>
 </div>

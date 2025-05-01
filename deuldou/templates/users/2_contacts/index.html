@@ -103,7 +103,13 @@
 
 {% block script %}
 <script>
+  function selectAll() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+  }
 
+  function deSelectAll() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  }
 
 </script>
 {% endblock script %}

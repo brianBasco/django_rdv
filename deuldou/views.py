@@ -418,20 +418,27 @@ def x_addContactsToGroupe(request: HttpRequest, liste_id:int):
     try:
         liste=ListeContacts.get_for_user(pk=liste_id, user=request.user)
     except Exception:
-        return HttpResponse(ERREUR, status=404)
+        print("Erreur dans la récupération de la liste de contacts")
+        return render(request, 'components/ListeContacts/addContacts/AddContactsSuccessModal.html', {'error':ERREUR}) 
     
     form:AjouterContactsForm = AjouterContactsForm(user=request.user, liste=liste)
     
-    if request.method == "POST":
-        form:AjouterContactsForm = AjouterContactsForm(request.POST,user=request.user, liste=liste)
-        if form.is_valid():
-            form.save()
-            response = render(request, 'components/ListeContacts/addContacts/AddContactsSuccessModal.html', {'success':"Les contacts ont été ajoutés au groupe"}) 
-            response['HX-Trigger'] = 'updateGroupeContacts_' + str(liste_id)
-            return response
     context = {}
     context['groupe_id'] = liste_id
     context['form'] = form
+
+    if request.method == "POST":
+        form:AjouterContactsForm = AjouterContactsForm(request.POST,user=request.user, liste=liste)
+        if form.is_valid():
+            contacts_a_ajouter = form.cleaned_data.get('contacts')
+            if contacts_a_ajouter:
+                form.save()
+                response = render(request, 'components/ListeContacts/addContacts/AddContactsSuccessModal.html', {'success':"Les contacts ont été ajoutés au groupe"}) 
+                response['HX-Trigger'] = 'updateGroupeContacts_' + str(liste_id)
+                return response
+            else:
+                context['error'] = "Aucun contact n'a été sélectionné !"
+    # GET :
     return render(request, 'components/ListeContacts/addContacts/AddContactsModal.html',context=context)
 
 

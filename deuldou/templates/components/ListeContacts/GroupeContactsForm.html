@@ -4,7 +4,7 @@
 
 
     <div class="mb-3">
-        <label for="nom_liste" class="form-label">Nom du groupe</label>
+        <label for="nom_liste" class="form-label">Nom du groupe :</label>
         {{ form.nom }}
         {% for error in form.nom.errors %}
         <div class="mt-1 alert alert-danger d-flex align-items-center" role="alert">
@@ -20,6 +20,11 @@
 
     <div class="mb-3">
         <label class="form-label">Ajoutez vos contacts :</label>
+
+        <div class="mb-3">
+            <button type="button" class="btn btn-light" onclick="selectAll()">Tout sélectionner</button>
+            <button type="button" class="btn btn-light" onclick="deSelectAll()">Tout désélectionner</button>
+        </div>
 
         <div class="form-check">
             {{ form.contacts }}

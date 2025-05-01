@@ -2,6 +2,24 @@
     {% load widget_tweaks %}
     {% csrf_token %}
 
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if form.fields.contacts.queryset.count == 0 %}
+
+    <p>Aucun contact à ajouter.</p>
+
+
+    {% else %}
+    <div class="mb-3">
+        <button type="button" class="btn btn-light" onclick="selectAll()">Tout sélectionner</button>
+        <button type="button" class="btn btn-light" onclick="deSelectAll()">Tout désélectionner</button>
+    </div>
+
+
     <div class="mb-3">
         <label class="form-label">Ajoutez vos contacts :</label>
 
@@ -11,6 +29,7 @@
     </div>
 
 
+    <input class="btn btn-primary" type="submit" value="Ajouter">
+    {% endif %}
 
-    <input class="btn btn-primary" type="submit" value="Enregistrer">
 </form>

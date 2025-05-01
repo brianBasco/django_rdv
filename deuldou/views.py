@@ -2,6 +2,7 @@
 import json
 from datetime import datetime
 from django.forms import formset_factory
+from django.utils import timezone
 
 import pytz
 from django.contrib import messages
@@ -147,11 +148,35 @@ def x_get_my_rdvs(request: HttpRequest):
     Retourne la liste des RDV où le User participe\n
     Classement des participations dans l'ordre ascendant
     """
-    participations = Participant.objects.filter(
-        email=request.user.email).order_by('rdv__jour')
+    aujourd_hui = timezone.now().date()
+
+    tri = request.GET.get('tri', '')
+
+    if tri == "anciens":
+        participations = Participant.objects.filter(
+            email=request.user.email,
+            rdv__jour__lt=aujourd_hui
+        ).order_by('-rdv__jour')  # du plus récent au plus ancien
+
+        rdvs = [r.rdv for r in participations]
+
+        response = render(request, MAIN + '/partials/modal/AnciensRdvModal.html', {'rdvs': rdvs})
+        response.headers['HX-Trigger'] = 'getParticipants'
+        return response
+    
+    else:
+        participations = Participant.objects.filter(
+            email=request.user.email,
+            rdv__jour__gte=aujourd_hui
+        ).order_by('rdv__jour')  # du plus proche au plus lointain
+    
     rdvs = [r.rdv for r in participations]
-    response = render(
-        request, MAIN + '/partials/liste_rdvs.html', {'rdvs': rdvs})
+
+    recherche = request.GET.get('rechercher_rdv', '')
+    if recherche:
+        rdvs = [r for r in rdvs if recherche.lower() in r.nom.lower()]
+
+    response = render(request, MAIN + '/partials/liste_rdvs.html', {'rdvs': rdvs})
     response.headers['HX-Trigger'] = 'getParticipants'
     return response
 

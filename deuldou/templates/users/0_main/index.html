@@ -31,11 +31,23 @@
 
 
   <!-- Button trigger modal -->
-  <div class="mb-3 d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
-      hx-get="{% url 'x_addRdv' %}" hx-target="#modalStatic">
-      <b>+ </b>Ajouter un rendez-vous
-    </button>
+  <div class="row mb-3">
+    <div class="col-auto">
+      <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
+        hx-get="{% url 'x_addRdv' %}" hx-target="#modalStatic">
+        <b>+ </b>Ajouter un rendez-vous
+      </button>
+    </div>
+    <div class="col-auto">
+      <input type="text" class="form-control form-control-sm" name="rechercher_rdv" placeholder="Rechercher par nom..."
+        hx-get="{% url 'x_getRdvs' %}" hx-trigger="keyup changed delay:300ms" hx-target="#liste_rdvs" />
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatic"
+        hx-get="{% url 'x_getRdvs' %}?tri=anciens" hx-target="#modalStatic">
+        Afficher les anciens Rdvs
+      </button>
+    </div>
   </div>
 
 

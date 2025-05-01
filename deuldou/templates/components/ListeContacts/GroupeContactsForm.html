@@ -18,6 +18,12 @@
         {% endfor %}
     </div>
 
+    {% if form.fields.contacts.queryset.count == 0 %}
+
+    <p>Aucun contact à ajouter.</p>
+
+
+    {% else %}
     <div class="mb-3">
         <label class="form-label">Ajoutez vos contacts :</label>
 
@@ -31,7 +37,6 @@
         </div>
     </div>
 
-
-
     <input class="btn btn-primary" type="submit" value="Enregistrer">
+    {% endif %}
 </form>

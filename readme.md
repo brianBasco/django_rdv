@@ -132,4 +132,4 @@ supprimer la partie modification de mot de passe dans page principale
 Changer suppression des contacts et Liste de contacts : passer par un modal static pour confirmer la suppression (plutôt que par le delete de Htmx).
 Prendre exemple sur la gestion des contacts pour le flux Modal, retour d'informations et changement de boutons
 Ajouter dans toutes les pages Htmx : if not request.headers.get('HX-Request') == 'true':
-        raise Http404("Cette page n'est accessible que via HTMX.")
+        raise Http404("Cette page n'est accessible que via HTMX.") : FAIT

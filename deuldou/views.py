@@ -150,25 +150,10 @@ def x_get_my_rdvs(request: HttpRequest):
     """
     aujourd_hui = timezone.now().date()
 
-    tri = request.GET.get('tri', '')
-
-    if tri == "anciens":
-        participations = Participant.objects.filter(
-            email=request.user.email,
-            rdv__jour__lt=aujourd_hui
-        ).order_by('-rdv__jour')  # du plus récent au plus ancien
-
-        rdvs = [r.rdv for r in participations]
-
-        response = render(request, MAIN + '/partials/modal/AnciensRdvModal.html', {'rdvs': rdvs})
-        response.headers['HX-Trigger'] = 'getParticipants'
-        return response
-    
-    else:
-        participations = Participant.objects.filter(
-            email=request.user.email,
-            rdv__jour__gte=aujourd_hui
-        ).order_by('rdv__jour')  # du plus proche au plus lointain
+    participations = Participant.objects.filter(
+        email=request.user.email,
+        rdv__jour__gte=aujourd_hui
+    ).order_by('rdv__jour')  # du plus proche au plus lointain
     
     rdvs = [r.rdv for r in participations]
 
@@ -179,6 +164,38 @@ def x_get_my_rdvs(request: HttpRequest):
     response = render(request, MAIN + '/partials/liste_rdvs.html', {'rdvs': rdvs})
     response.headers['HX-Trigger'] = 'getParticipants'
     return response
+
+
+@login_required
+@htmx_required
+def x_get_my_anciens_rdvs(request: HttpRequest):
+    """
+    Sécurité : OK
+    Retourne la liste des anciens rdvs où le User participe\n
+    Un rdv ancien est un rdv don la date est antérieure à la date du jour
+    Classement des participations dans l'ordre ascendant
+    """
+    aujourd_hui = timezone.now().date()
+
+    participations = Participant.objects.filter(
+        email=request.user.email,
+        rdv__jour__lt=aujourd_hui
+    ).order_by('-rdv__jour')  # du plus récent au plus ancien
+
+    rdvs = [r.rdv for r in participations]
+
+    # Attention pour les résultats de recherche on ne renvoie que le partial sinon on va updater le modal avec l'input de recherche !    
+    if 'rechercher_rdv' in request.GET:
+        recherche = request.GET.get('rechercher_rdv')
+        rdvs = [r for r in rdvs if recherche.lower() in r.nom.lower()]
+        response = render(request, MAIN + '/partials/liste_rdvs.html', {'rdvs': rdvs})
+        response.headers['HX-Trigger'] = 'getParticipants'
+        return response
+
+    response = render(request, MAIN + '/partials/modal/AnciensRdvModal.html', {'rdvs': rdvs})
+    response.headers['HX-Trigger'] = 'getParticipants'
+    return response
+
 
 
 @login_required

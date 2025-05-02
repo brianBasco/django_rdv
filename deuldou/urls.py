@@ -22,6 +22,7 @@ urlpatterns = [
     path('', views.home_view, name="home"),
     path('x_addRdv', views.x_addRdv, name="x_addRdv"),
     path('x_getRdvs', views.x_get_my_rdvs, name="x_getRdvs"),
+    path('x_get_my_anciens_rdvs', views.x_get_my_anciens_rdvs, name="x_get_my_anciens_rdvs"),
     path('htmx_updateParticipant/<int:id_participant>',
          views.x_updateMyParticipation, name="htmx_updateParticipant"),
     path('htmx_getParticipants/<int:id_rdv>',

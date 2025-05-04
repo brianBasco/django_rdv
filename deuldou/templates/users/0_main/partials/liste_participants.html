@@ -15,7 +15,7 @@
             <div class="col text-end">
                 <!-- Bouton placé à droite -->
                 <!-- Button trigger modal -->
-                {% if request.user.email == p.email %}
+                {% if request.user.email == p.email and not obsolete %}
                 <button hx-get="{% url 'htmx_updateParticipant' p.id %}" hx-target="#modalStatic" type="button"
                     class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalStatic">
                     <svg xmlns=" http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

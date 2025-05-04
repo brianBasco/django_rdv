@@ -1,8 +1,9 @@
 {% for participant in participants %}
+{% comment %}
 <li class="list-group-item">
   <div class="row">
     <div class="col">
-      <b>{{ forloop.counter }}. {{ participant.nom }}</b> [{{ participant.get_statut_display }}]
+      {{ forloop.counter }}. <b>{{ participant.nom }}</b> [{{ participant.get_statut_display }}]
     </div>
     <div class="col text-end">
       <button id="btn_del_{{ participant.id }}" type="button" class="btn btn-sm btn-outline-danger" alt="supprimer"
@@ -12,6 +13,22 @@
       </button>
     </div>
   </div>
+  {% endcomment %}
+
+<li class="list-group-item py-3 d-flex justify-content-between align-items-center">
+  <div>
+    <span class="fw-semibold">{{ forloop.counter }}. <b>{{ participant.nom }}</b></span>
+    <span class="badge bg-secondary ms-2">{{ participant.get_statut_display }}</span>
+  </div>
+  <button id="btn_del_{{ participant.id }}" type="button" class="btn btn-sm btn-outline-danger" aria-label="Supprimer"
+    data-bs-toggle="modal" data-bs-target="#modalConfirm" title="Supprimer le participant"
+    onclick="modalAskDelete('Supprimer {{ participant.nom }} ?', '{{ participant.id }}')">
+    <i><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-x-lg"
+        viewBox="0 0 16 16">
+        <path
+          d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+      </svg></i>
+  </button>
 
 </li>
 {% empty %}

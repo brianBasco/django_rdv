@@ -86,6 +86,7 @@ class Participant(models.Model):
                 fields=["rdv", "email"], name='participation unique', violation_error_message="Ce participant existe déjà"),
         ]
     
+    
     @classmethod
     def get_for_user(cls, participant_id:int, user:User):
         participant: Participant = cls.objects.get(pk=participant_id)

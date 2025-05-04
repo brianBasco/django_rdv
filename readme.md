@@ -133,3 +133,7 @@ Changer suppression des contacts et Liste de contacts : passer par un modal stat
 Prendre exemple sur la gestion des contacts pour le flux Modal, retour d'informations et changement de boutons
 Ajouter dans toutes les pages Htmx : if not request.headers.get('HX-Request') == 'true':
         raise Http404("Cette page n'est accessible que via HTMX.") : FAIT
+Ne pas pouvoir se modifier si date rdv < aujourd'hui : FAIT (le 04/05/2025)
+Ne pas pouvoir ajouter de participants si date rdv < aujourd'hui : à faire (contrainte à implémenter dans Formulaire Participation : FAIT et UX dans Gestion des RDVS : FAIT)
+Ne pas pouvoir ajouter de contacts si date rdv < aujourd'hui : à faire (contrainte à implémenter dans formulaire contacts)
+Ajouter un groupe de contacts dans l'ajout de Participants (dans Gestion des Rdvs)

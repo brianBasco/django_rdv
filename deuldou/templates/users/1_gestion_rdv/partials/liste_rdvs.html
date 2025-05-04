@@ -7,43 +7,37 @@
         </button>
 
     </h2>
-    <div id="collapse{{rdv.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{rdv.id}}">
-        <div class="accordion-body">
-            <p>
-                lieu : {{ rdv.lieu }}
-            </p>
-            <p>
-                jour : {{ rdv.jour }}
-            </p>
-            <p>
-                Début : {{ rdv.heure_debut }}
-            </p>
-            <p>
-                Fin : {{ rdv.heure_fin }}
-            </p>
-            <div class="btn-group">
 
+    <div id="collapse{{rdv.id}}" aria-labelledby="heading{{rdv.id}}"
+        class="accordion-body bg-light rounded-3 p-4 shadow-sm accordion-collapse collapse">
+        <ul class="list-unstyled mb-3">
+            <li><strong>Lieu :</strong> {{ rdv.lieu }}</li>
+            <li><strong>Jour :</strong> {{ rdv.jour|date:"l j F Y" }}</li>
+            <li><strong>Début :</strong> {{ rdv.heure_debut|time:"H:i" }}</li>
+            <li><strong>Fin :</strong> {{ rdv.heure_fin|time:"H:i" }}</li>
+        </ul>
 
-                <button class="btn btn-people-fill-custom dropdown-toggle" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#participants_{{ rdv.id }}" aria-expanded="false"
-                    aria-controls="collapseParticipants">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-people-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                    </svg>
+        <div class="btn-group">
+            <button class="btn btn-people-fill-custom dropdown-toggle" type="button" data-bs-toggle="collapse"
+                data-bs-target="#participants_{{ rdv.id }}" aria-expanded="false" aria-controls="collapseParticipants">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-people-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                </svg>
+            </button>
+            {% if aujourd_hui < rdv.jour %} <button class="btn btn-people-add-custom" data-bs-toggle="modal"
+                data-bs-target="#modalStatic" title="Ajouter un participant"
+                hx-get="{% url 'x_addParticipant' rdv.id %}" hx-target="#modalStatic">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-person-add" viewBox="0 0 16 16">
+                    <path
+                        d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                    <path
+                        d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z" />
+                </svg>
                 </button>
-                <button class="btn btn-people-add-custom" data-bs-toggle="modal" data-bs-target="#modalStatic"
-                    title="Ajouter un participant" hx-get="{% url 'x_addParticipant' rdv.id %}"
-                    hx-target="#modalStatic">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-person-add" viewBox="0 0 16 16">
-                        <path
-                            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-                        <path
-                            d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z" />
-                    </svg>
-                </button>
+                {% endif %}
 
                 <button class="btn btn-settings-custom" title="Modifier le Rdv" data-bs-toggle="modal"
                     data-bs-target="#modalStatic" hx-get="{% url 'x_update_rdv' rdv.id %}" hx-target="#modalStatic">
@@ -70,21 +64,21 @@
                 </button>
 
 
-            </div>
-            <div id="ajout-contact-results">
-
-            </div>
-
-            <ol class="list-group collapse" id="participants_{{ rdv.id }}"
-                hx-trigger="load, getParticipants from:body, participantAdded_{{ rdv.id }} from:body, participantDeleted_{{ rdv.id }} from:body"
-                hx-get="{% url 'x_gestion_getParticipants' rdv.id %}" hx-swap="innerHTML">
-
-                {# Insertion des participants par appel à Htmx -> template : liste_participants.html #}
-
-
-            </ol>
         </div>
+        <div id="ajout-contact-results">
+
+        </div>
+
+        <ol class="list-group collapse" id="participants_{{ rdv.id }}"
+            hx-trigger="load, getParticipants from:body, participantAdded_{{ rdv.id }} from:body, participantDeleted_{{ rdv.id }} from:body"
+            hx-get="{% url 'x_gestion_getParticipants' rdv.id %}" hx-swap="innerHTML">
+
+            {# Insertion des participants par appel à Htmx -> template : liste_participants.html #}
+
+
+        </ol>
     </div>
+</div>
 </div>
 {% empty %}
 <div class="container">

@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -45,6 +46,13 @@ class ParticipantForm(forms.ModelForm):
         if Participant.objects.filter(email=email, rdv=rdv).exists():
             raise ValidationError("{} est déjà enregistré pour ce Rendez-vous".format(email))
         return email
+    
+    def clean(self):
+        super().clean()
+        rdv: Deuldou = self.cleaned_data["rdv"]
+        # la date du Rdv ne peut pas être inférieure à la date du jour pour ajouter un participant
+        if rdv.jour < timezone.now().date():
+            raise ValidationError("La date du rendez-vous ne peut pas être dans le passé.")
 
 
 # Formulaire à renommer -> ParticipantUpdate

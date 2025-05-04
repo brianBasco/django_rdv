@@ -256,14 +256,14 @@ def x_getParticipants(request: HttpRequest, id_rdv: int):
     Retourne les participants à un RDV
     """
     try:
-        rdv = Deuldou.objects.get(pk=id_rdv)
+        rdv: Deuldou = Deuldou.objects.get(pk=id_rdv)
     except Exception:
-        return HttpResponse(ERREUR)
+        return HttpResponse(ERREUR, status=400)
     # Sécurité : le User qui demande ce RDV participe t-il à ce RDV ? S'il participe il doit donc avoir un participation correspondant à son email et au RDV
     try:
         Participant.objects.get(rdv=rdv, email=request.user.email)
     except Exception:
-        return HttpResponse(PERMISSION)
+        return HttpResponse(PERMISSION, status=403)
     participants = Participant.objects.filter(rdv=rdv)
     # Ajout du nombre de participants :
     # nbparticipants = Participant.objects.filter(Q(statut=Participant.PRESENT) | Q(statut=Participant.RETARD), rdv=rdv).count()
@@ -273,7 +273,10 @@ def x_getParticipants(request: HttpRequest, id_rdv: int):
     if nbparticipants < 2:
         inscrits = 'inscrit'
     nbre = "{} {}".format(str(nbparticipants), inscrits)
-    return render(request, "users/0_main/partials/liste_participants.html", {'id_rdv': id_rdv, 'participants': participants, 'nbre': nbre})
+    aujourd_hui = timezone.now().date()
+    # si le rdv est antérieur à la date du jour, alors on ne peut plus modifier sa participation (cela n'a plus de sens)
+    obsolete = rdv.jour < aujourd_hui
+    return render(request, "users/0_main/partials/liste_participants.html", {'id_rdv': id_rdv, 'participants': participants, 'nbre': nbre, 'obsolete':obsolete})
 
 # ------------------- Fin des vues de la page principale  ---------------------
 
@@ -543,7 +546,7 @@ def x_get_rdvs(request: HttpRequest):
     rdvs: list[Deuldou] = Deuldou.objects.filter(
         created_by=request.user).order_by('jour')
     response: HttpResponse = render(
-        request, "users/1_gestion_rdv/partials/liste_rdvs.html", {'rdvs': rdvs})
+        request, "users/1_gestion_rdv/partials/liste_rdvs.html", {'rdvs': rdvs, "aujourd_hui": timezone.now().date()})
     #response["HX-Trigger"] = "getParticipants"
     return response
 

@@ -25,7 +25,7 @@ from pwgen import pwgen
 
 from deuldou.utils.utils import htmx_required
 
-from .forms import AjouterContactsForm, ContactForm, DeleteContactsForm, ListeContactsForm, ParticipantForm, RdvForm, SelectContactForm, UpdateNomListeContactForm, UpdateParticipantForm
+from .forms import AjouterContactsForm, ContactForm, DeleteContactsForm, ListeContactsForm, ParticipantForm, RdvForm, SelectContactForm, SelectGroupContactsForm, UpdateNomListeContactForm, UpdateParticipantForm
 from .models import Contact, Deuldou, ListeContacts, ListeContacts, Participant, Tag, User
 
 # ------------------- Paramètres de config -----------------------
@@ -729,6 +729,65 @@ def x_selectContacts(request: HttpRequest, rdv_id:int):
     if len(formset) != 0:
         context['formset'] = formset
     return render(request, '{}/partials/liste_contacts.html'.format(GESTION_RDV), context=context)
+
+
+
+# Fonctions pour l'ajout d'un groupe de contacts comme PArticipants :
+def x_select_GroupContacts_ToAdd(request, rdv_id):
+    try:
+        Deuldou.get_for_user(rdv_id=rdv_id, user=request.user)
+    except:
+        print("Erreur lors de la vérification de sécurité !")
+        return HttpResponse(status=400)
+    
+    form = SelectGroupContactsForm(user=request.user)
+
+    context = {}
+    context['form'] = form
+    context['rdv_id'] = rdv_id
+    if request.method =='POST':
+        form = SelectGroupContactsForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            return render(request, '', context=context)    
+
+    # GET :
+    return render(request, '{}/partials/groupe_contacts/groupe_contacts_Modal.html'.format(GESTION_RDV), context=context)    
+    
+
+
+
+def ajouter_contacts_groupe_a_rdv(request, rdv_id, groupe_id):
+    """
+    Vérifier sécurité : check du groupe de contact, du rdv ou des contacts comme appartenant au User
+    Insertion par groupe de contacts complet avec notifications des contacts déjà enregistrés :
+    """
+    try:
+        Deuldou.get_for_user(pk=rdv_id, user=request.user)
+        groupe: ListeContacts = ListeContacts.get_for_user(pk=groupe_id, user=request.user)
+    except:
+        print("Erreur lors de la vérification de sécurité !")
+        return HttpResponse(status=400)
+
+    deja_participants = []
+    ajoutes = []
+
+    for contact in groupe.contacts.all():
+        print("contact : {}", contact.nom)
+        participant, created = Participant.objects.get_or_create(contact=contact)
+
+        if not created:
+            deja_participants.append(contact.nom)
+        else:
+            ajoutes.append(contact.nom)
+
+    # Construction du message
+    if ajoutes:
+        messages.success(request, f"{len(ajoutes)} contact(s) ajouté(s) au rendez-vous.")
+    if deja_participants:
+        messages.warning(request, f"{len(deja_participants)} contact(s) déjà inscrit(s) : {', '.join(deja_participants)}")
+
+    #return redirect('detail_rendezvous', rdv_id=rdv.id)
+    return render(request, "", context=context)
 
 
 

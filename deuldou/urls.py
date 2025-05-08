@@ -40,6 +40,8 @@ urlpatterns = [
     path('x_deleteParticipant/<int:id>',
          views.x_deleteParticipant, name="x_deleteParticipant"),
     path('x_selectContacts/<int:rdv_id>', views.x_selectContacts, name="x_selectContacts"),
+    path('ajouter_contacts_groupe_a_rdv', views.ajouter_contacts_groupe_a_rdv, name='ajouter_contacts_groupe_a_rdv'),
+    path('x_select_GroupContacts_ToAdd/<int:rdv_id>', views.x_select_GroupContacts_ToAdd, name='x_select_GroupContacts_ToAdd'),
 
      # fonctions de la page Contacts :
      path('contacts', views.contacts_view, name="contacts"),

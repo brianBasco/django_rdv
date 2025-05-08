@@ -1,0 +1,29 @@
+<form id="form" hx-post="{% url 'x_select_GroupContacts_ToAdd' rdv_id  %}" hx-target="#modalStatic">
+
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+
+    {# Mettre toutes les erreurs au début du formulaire pour un rendu visuel plus agréable #}
+
+    {% for error in form.non_field_errors %}
+    <div class="pt-1 alert alert-danger d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill" />
+        </svg>
+        <div>
+            {{ error|escape }}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="mb-3">
+        {{ form }}
+    </div>
+
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary">Sélectionnez</button>
+    </div>
+
+
+</form>

@@ -125,15 +125,16 @@ Ajout des codes dans les Settings du projet Django
 ## A faire :
 
 App registration : fonctionnel (27/02/2025)
-Télécharger Calendrier par Rdv : fonctionnel
+-Télécharger Calendrier par Rdv : fonctionnel
 Vérifier s'il y a bien popper.js car le menu s'aligne hors de l'écran !
-Rajouter des logos/icones devant chaque bouton ou lien
-supprimer la partie modification de mot de passe dans page principale
-Changer suppression des contacts et Liste de contacts : passer par un modal static pour confirmer la suppression (plutôt que par le delete de Htmx).
-Prendre exemple sur la gestion des contacts pour le flux Modal, retour d'informations et changement de boutons
-Ajouter dans toutes les pages Htmx : if not request.headers.get('HX-Request') == 'true':
+-Rajouter des logos/icones devant chaque bouton ou lien
+-supprimer la partie modification de mot de passe dans page principale
+-Changer suppression des contacts et Liste de contacts : passer par un modal static pour confirmer la suppression (plutôt que par le delete de Htmx).
+(Prendre exemple sur la gestion des contacts pour le flux Modal, retour d'informations et changement de boutons)
+-Ajouter dans toutes les pages Htmx : if not request.headers.get('HX-Request') == 'true':
         raise Http404("Cette page n'est accessible que via HTMX.") : FAIT
-Ne pas pouvoir se modifier si date rdv < aujourd'hui : FAIT (le 04/05/2025)
-Ne pas pouvoir ajouter de participants si date rdv < aujourd'hui : à faire (contrainte à implémenter dans Formulaire Participation : FAIT et UX dans Gestion des RDVS : FAIT)
-Ne pas pouvoir ajouter de contacts si date rdv < aujourd'hui : à faire (contrainte à implémenter dans formulaire contacts)
-Ajouter un groupe de contacts dans l'ajout de Participants (dans Gestion des Rdvs)
+-Ne pas pouvoir se modifier si date rdv < aujourd'hui : FAIT (le 04/05/2025)
+-Ne pas pouvoir ajouter de participants si date rdv < aujourd'hui : à faire (contrainte à implémenter dans Formulaire Participation : FAIT et UX dans Gestion des RDVS : FAIT)
+-Ne pas pouvoir ajouter de contacts si date rdv < aujourd'hui : à faire (contrainte à implémenter dans formulaire contacts) - pas grave si non fait
+(Pas besoin d'implémenter cette contrainte dans le modèle Participant car cela ne casse pas la cohérence de la bdd)
+-Ajouter un groupe de contacts dans l'ajout de Participants (dans Gestion des Rdvs)

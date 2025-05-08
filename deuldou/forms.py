@@ -78,6 +78,26 @@ class SelectContactForm(forms.Form):
     is_checked.widget.attrs.update({"class": "form-check-input form-check-input-perso"})
 
 
+
+class SelectGroupContactsForm(forms.Form):
+    """
+    Formulaire de sélection d'un groupe de contacts
+    Attribut obligatoire à passer à l'instanciation : user
+    """
+    groupes = forms.ModelChoiceField(required=False, queryset = None)
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Récupère l’utilisateur passé depuis la vue
+        super().__init__(*args, **kwargs)
+        self.user = user  # Stocke l’utilisateur dans l’instance du formulaire
+         # Ne tente de modifier le queryset que si le champ 'contacts' est présent dans le formulaire
+        if not user:
+            raise Exception("Le paramètre user doit être spécifié à l'initialisation du formulaire")
+        self.fields['groupes'].queryset = ListeContacts.objects.filter(user=self.user)
+    
+
+
+
 # -------------- Formulaire pour la gestion des contacts --------------
 
 class ContactForm(forms.ModelForm):

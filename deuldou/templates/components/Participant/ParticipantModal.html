@@ -10,6 +10,9 @@
         </div>
         <div class="modal-footer" id="modalFooter">
 
+
+            <button type="button" class="btn btn-secondary" hx-get="{% url 'x_select_GroupContacts_ToAdd' rdv_id %}"
+                hx-target="#modalStatic">Ajouter un groupe de contacts</button>
             <button type="button" class="btn btn-secondary" hx-get="{% url 'x_selectContacts' rdv_id %}"
                 hx-target="#modalStatic">Sélectionner des contacts</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

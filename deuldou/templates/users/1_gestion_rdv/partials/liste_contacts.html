@@ -41,11 +41,12 @@
 
         </div>
         <div class="modal-footer" id="modalFooter">
-            <button type="button" class="btn btn-default" hx-get="{% url 'x_addParticipant' rdv_id %}"
-                hx-target="#modalStatic"><- </button>
+            <button type="button" class="btn btn-outline-dark" hx-get="{% url 'x_addParticipant' rdv_id %}"
+                hx-target="#modalStatic">
+                <- Retour</button>
                     <button type="button" class="btn btn-primary" hx-post="{% url 'x_selectContacts' rdv_id %}"
                         hx-include="#contact-form" hx-target="#modalStatic">Sauvegarder</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Annuler</button>
         </div>
     </div>
 </div>

@@ -739,7 +739,8 @@ def x_select_GroupContacts_ToAdd(request, rdv_id):
     except:
         print("Erreur lors de la vérification de sécurité !")
         return HttpResponse(status=400)
-    
+
+    """
     form = SelectGroupContactsForm(user=request.user)
 
     context = {}
@@ -752,7 +753,22 @@ def x_select_GroupContacts_ToAdd(request, rdv_id):
 
     # GET :
     return render(request, '{}/partials/groupe_contacts/groupe_contacts_Modal.html'.format(GESTION_RDV), context=context)    
-    
+    """
+    groupes = ListeContacts.objects.filter(user=request.user)
+
+     # Préparer une liste de dictionnaires avec groupe et nombre de contacts
+    groupes_liste = []
+    for groupe in groupes:
+        contact_count = groupe.contacts.count()  # Utilise le related_name de ForeignKey
+        groupes_liste.append({
+            'groupe': groupe,
+            'contact_count': contact_count
+        })
+
+    context={}
+    context['rdv_id'] = rdv_id
+    context['groupes'] = groupes_liste
+    return render(request, '{}/partials/groupe_contacts/groupe_contacts_Modal.html'.format(GESTION_RDV), context=context)    
 
 
 
@@ -762,7 +778,7 @@ def ajouter_contacts_groupe_a_rdv(request, rdv_id, groupe_id):
     Insertion par groupe de contacts complet avec notifications des contacts déjà enregistrés :
     """
     try:
-        Deuldou.get_for_user(pk=rdv_id, user=request.user)
+        Deuldou.get_for_user(rdv_id=rdv_id, user=request.user)
         groupe: ListeContacts = ListeContacts.get_for_user(pk=groupe_id, user=request.user)
     except:
         print("Erreur lors de la vérification de sécurité !")
@@ -773,21 +789,23 @@ def ajouter_contacts_groupe_a_rdv(request, rdv_id, groupe_id):
 
     for contact in groupe.contacts.all():
         print("contact : {}", contact.nom)
-        participant, created = Participant.objects.get_or_create(contact=contact)
-
-        if not created:
+        if Participant.objects.filter(rdv=rdv_id, email=contact.email).exists():
+            #participant, created = Participant.objects.get_or_create({'id':})
             deja_participants.append(contact.nom)
         else:
             ajoutes.append(contact.nom)
 
+    context={}
+    context['rdv_id'] = rdv_id
     # Construction du message
     if ajoutes:
-        messages.success(request, f"{len(ajoutes)} contact(s) ajouté(s) au rendez-vous.")
+        context['success'] = f"{len(ajoutes)} contact(s) ajouté(s) au rendez-vous."
     if deja_participants:
-        messages.warning(request, f"{len(deja_participants)} contact(s) déjà inscrit(s) : {', '.join(deja_participants)}")
-
-    #return redirect('detail_rendezvous', rdv_id=rdv.id)
-    return render(request, "", context=context)
+        context['error'] = f"{len(deja_participants)} contact(s) déjà inscrit(s) : {', '.join(deja_participants)}"
+    if not ajoutes and not deja_participants:
+        context['error'] = "Aucun contact à inscrire"
+        
+    return render(request, "{}/partials/groupe_contacts/groupe_contacts_success.html".format(GESTION_RDV), context=context)
 
 
 

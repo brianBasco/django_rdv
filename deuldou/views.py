@@ -217,7 +217,8 @@ def x_addRdv(request: HttpRequest):
         else:
             participation.statut = Participant.ABSENT
         participation.save()
-        response: HttpResponse = HttpResponse('<div class="alert alert-success" role="alert">Votre rdv a été créé !</div>')
+        #response: HttpResponse = HttpResponse('<div class="alert alert-success" role="alert">Votre rdv a été créé !</div>')
+        response = render(request, 'components/Rdv/RdvModalSuccess.html', {"success": "Le rdv {} a été créé !".format(rdv.nom), 'rdv':rdv })
         response["HX-Trigger"] = 'updateRDV'
         return response
     return render(request, 'components/Rdv/RdvModal.html', {'form': form})

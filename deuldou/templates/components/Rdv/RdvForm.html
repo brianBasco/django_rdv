@@ -21,7 +21,7 @@
         <div class="form-text">Les champs marqués d'une étoile <b>(*)</b> sont obligatoires</div>
     </div>
 
-    <form class="form p-2" hx-post="{% url 'x_addRdv' %}" hx-swap="outerHTML" hx-target="#RdvForm">
+    <form class="form p-2" hx-post="{% url 'x_addRdv' %}" hx-target="#modalStatic">
         {% csrf_token %}
         {% load widget_tweaks %}
 

@@ -1,7 +1,7 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header" id="modalHeader">
-            <h5 class="modal-title">Ajouter un contact</h5>
+            <h5 class="modal-title">Ajouter un Rendez-vous</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modalBody">
@@ -17,13 +17,13 @@
             </div>
             {% endif %}
 
-        </div>
-        <div class="modal-footer" id="modalFooter">
-            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Ok</button>
-            <button hx-get="{% url 'x_addContact' %}" hx-target="#modalStatic" type="button"
-                class="btn btn-outline-dark">
-                Ajouter contact +
-            </button>
+            <div class="mb-3">
+                Vous voulez ajouter :
+            </div>
+
+            <div class="mb-3">
+                {% include 'components/Buttons/add_participants.html' %}
+            </div>
         </div>
     </div>
 </div>

@@ -59,3 +59,20 @@
 </div>
 
 {% endblock content %}
+
+{% block script %}
+
+<script>
+  // {# Fonction pour la modification du Check button dans add_participants.html # }
+  document.body.addEventListener('htmx:configRequest', function (event) {
+    if (event.target.id === 'addButton') {
+      const selected = document.querySelector('input[name="urlOption"]:checked');
+      if (selected) {
+        event.detail.path = selected.value;
+      }
+    }
+  });
+
+</script>
+
+{% endblock script %}

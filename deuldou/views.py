@@ -684,11 +684,11 @@ def x_addParticipant(request: HttpRequest, rdv_id: int):
             response = render(request, 'components/Participant/formInfosModal.html', context)
             response['HX-Trigger'] = 'participantAdded_' + str(rdv_id)
             return response
-        else:
+        #else:
             # Formulaire invalide : Renvoi du formulaire avec erreurs :
-            return render(request, 'components/Participant/ParticipantModal.html', {"form": form, "rdv_id": rdv_id})
+            #return render(request, 'components/Participant/ParticipantModal.html', {"form": form, "rdv_id": rdv_id})
     # Méthode GET : Formulaire vierge :
-    context = {"form": form, "rdv_id": rdv_id}
+    context = {"form": form, "rdv_id": rdv_id, "rdv":rdv }
     return render(request, 'components/Participant/ParticipantModal.html', context=context)
 
 

@@ -48,6 +48,23 @@
 
 <script>
 
+  // Tooltips for Bootstrap
+  //const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  //const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+  document.body.addEventListener("htmx:afterSettle", () => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach(el => {
+      // Détruire l'instance existante si nécessaire (évite les doublons)
+      if (bootstrap.Tooltip.getInstance(el)) {
+        bootstrap.Tooltip.getInstance(el).dispose();
+      }
+      // Créer une nouvelle instance
+      new bootstrap.Tooltip(el);
+    });
+  });
+
+
   document.body.addEventListener("rdvDeleted", function (evt) {
     //document.getElementById("accordion-item_" + evt.detail.value).remove()
     //$("#accordion-item_" + evt.detail.value).fadeOut(1000, function () {$(this).remove();
@@ -79,7 +96,8 @@
   let modalAskDelete = (message, participant_id) => {
     const urlPattern = "{% url 'x_deleteParticipant' 0 %}"; // Génère l'URL partielle
     const finalUrl = urlPattern.replace('0', participant_id);
-    const buttonConfirm = `<button type="button" class="btn btn-outline-danger" hx-target="#modalConfirm" hx-post="${finalUrl}">Suppression</button>`;
+    const buttonConfirm = `<button type="button" class="btn btn-outline-danger" hx-target="#modalConfirm"
+  hx-post="${finalUrl}">Suppression</button>`;
     const buttonCancel = '<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>'
     $("#modalConfirmBody").html(message);
     $("#modalConfirmFooterButtons").append(buttonCancel);
@@ -93,7 +111,8 @@
   let askModalDeleteRdv = (message, rdv_id) => {
     const urlPattern = "{% url 'x_deleteRdv' 0 %}"; // Génère l'URL partielle
     const finalUrl = urlPattern.replace('0', rdv_id);
-    const buttonConfirm = `<button type="button" class="btn btn-outline-danger" hx-target="#modalConfirm" hx-delete="${finalUrl}">Suppression</button>`;
+    const buttonConfirm = `<button type="button" class="btn btn-outline-danger" hx-target="#modalConfirm"
+  hx-delete="${finalUrl}">Suppression</button>`;
     const buttonCancel = '<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>'
     $("#modalConfirmBody").html(message);
     $("#modalConfirmFooterButtons").append(buttonCancel);
@@ -103,6 +122,30 @@
     // Réinitialiser HTMX pour prendre en compte les nouveaux éléments
     htmx.process(container);
   }
+
+  function selectAll() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+  }
+
+  function deSelectAll() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  }
+
+  function searchByName() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const labels = document.querySelectorAll("label > b");
+
+    labels.forEach(label => {
+      const text = label.textContent.toLowerCase();
+      const parent = label.closest(".form-check");
+      if (text.includes(input)) {
+        parent.style.display = "";
+      } else {
+        parent.style.display = "none";
+      }
+    });
+  }
+
 
 </script>
 

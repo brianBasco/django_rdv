@@ -6,7 +6,7 @@
         <li class="list-group-item d-flex justify-content-between align-items-center"
             hx-get="{% url 'ajouter_contacts_groupe_a_rdv' rdv_id item.groupe.id %}" hx-trigger="click"
             hx-target="#modalStatic">{{ item.groupe }}
-            <span class="badge bg-primary">{{ item.contact_count }} -></span>
+            <span class="badge bg-primary">{{ item.contact_count }} contact(s)</span>
         </li>
 
         {% empty %}

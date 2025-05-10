@@ -5,17 +5,24 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modalBody">
+
+            <div class="mb-3">
+                Le participant sera ajouté à <b>{{ rdv.nom }}</b>
+            </div>
+
             {% include 'components/Participant/ParticipantForm.html' %}
 
         </div>
         <div class="modal-footer" id="modalFooter">
 
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <button type="button" class="btn btn-outline-dark"
+                    hx-get="{% url 'x_select_GroupContacts_ToAdd' rdv_id %}" hx-target="#modalStatic">Ajouter un groupe
+                    de contacts</button>
+                <button type="button" class="btn btn-outline-dark" hx-get="{% url 'x_selectContacts' rdv_id %}"
+                    hx-target="#modalStatic">Sélectionner des contacts</button>
+            </div>
 
-            <button type="button" class="btn btn-secondary" hx-get="{% url 'x_select_GroupContacts_ToAdd' rdv_id %}"
-                hx-target="#modalStatic">Ajouter un groupe de contacts</button>
-            <button type="button" class="btn btn-secondary" hx-get="{% url 'x_selectContacts' rdv_id %}"
-                hx-target="#modalStatic">Sélectionner des contacts</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
         </div>
     </div>
 </div>

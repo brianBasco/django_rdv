@@ -1,23 +1,8 @@
 {% for participant in participants %}
-{% comment %}
-<li class="list-group-item">
-  <div class="row">
-    <div class="col">
-      {{ forloop.counter }}. <b>{{ participant.nom }}</b> [{{ participant.get_statut_display }}]
-    </div>
-    <div class="col text-end">
-      <button id="btn_del_{{ participant.id }}" type="button" class="btn btn-sm btn-outline-danger" alt="supprimer"
-        aria-label="Supprimer" data-bs-toggle="modal" title="Supprimer le participant" data-bs-target="#modalConfirm"
-        onclick="modalAskDelete('Supprimer {{ participant.nom }} ?', '{{ participant.id }}')">
-        <b>X</b>
-      </button>
-    </div>
-  </div>
-  {% endcomment %}
 
 <li class="list-group-item py-3 d-flex justify-content-between align-items-center">
   <div>
-    <span class="fw-semibold">{{ forloop.counter }}. <b>{{ participant.nom }}</b></span>
+    <span class="fw-semibold">{{ forloop.counter }}. <b>{{ participant.nom }}</b> [{{ participant.email }}]</span>
     <span class="badge bg-secondary ms-2">{{ participant.get_statut_display }}</span>
   </div>
   <button id="btn_del_{{ participant.id }}" type="button" class="btn btn-sm btn-outline-danger" aria-label="Supprimer"

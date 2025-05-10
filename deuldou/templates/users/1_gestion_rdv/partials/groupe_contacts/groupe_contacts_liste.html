@@ -4,7 +4,7 @@
         {% for item in groupes %}
 
         <li class="list-group-item d-flex justify-content-between align-items-center"
-            hx-get="{% url 'ajouter_contacts_groupe_a_rdv' rdv_id item.groupe.id %}" hx-trigger="click"
+            hx-get="{% url 'x_selectContacts' rdv_id %}?groupe={{ item.groupe.id }}" hx-trigger="click"
             hx-target="#modalStatic">{{ item.groupe }}
             <span class="badge bg-primary">{{ item.contact_count }} contact(s)</span>
         </li>

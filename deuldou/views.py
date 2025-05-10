@@ -396,7 +396,7 @@ def x_getListesContacts(request:HttpRequest):
     if recherche:
         listes = listes.filter(nom__icontains=recherche)
 
-    return render(request, '{}/partials/liste_ListeContacts.html'.format(CONTACTS), {'listes': listes} )
+    return render(request, '{}/partials/liste_groupe_contacts.html'.format(CONTACTS), {'listes': listes} )
 
 @login_required
 @htmx_required
@@ -698,17 +698,30 @@ def x_selectContacts(request: HttpRequest, rdv_id:int):
     """
     Retourne la liste des contacts sans ceux déjà inscrits au RDV \n
     Ajoute les contacts sélectionnés comme participants
+    Si les contacts à ajouter sont ceux d'un groupe de contacts, is_checked est coché par défaut\n
+    car l'utilisateur souhaite ajouter les contacts du groupe par défaut comme participants  
     """
+    is_GET_groupe = 'groupe' in request.GET
     try:
         rdv:Deuldou = Deuldou.get_for_user(rdv_id=rdv_id, user=request.user)
+        if is_GET_groupe:
+           groupe: ListeContacts = ListeContacts.get_for_user(pk=request.GET["groupe"],user=request.user)
     except:
-        return HttpResponse(ERREUR)
+        print("Une erreur s'est produite sur la sécurité")
+        return render(request, '{}/partials/retour_infos.html'.format(GESTION_RDV),{'error':ERREUR}) 
     # récupérer les emails des participants au Rdv
     emails = [p.email for p in Participant.objects.filter(rdv=rdv_id)]
     # On enlève les participants pour déjà présents de la liste de contacts
-    contacts = request.user.contacts.exclude(email__in=emails)
+    #print('groupe : {}'.format(groupe))
+    if is_GET_groupe:
+        contacts = groupe.contacts.all().exclude(email__in=emails)
+    else:
+        contacts = request.user.contacts.exclude(email__in=emails)
     ContactsFormSet = formset_factory(SelectContactForm, extra=0)
-    formset = ContactsFormSet(initial=[{"nom": c.nom, "email": c.email} for c in contacts])
+    if is_GET_groupe:
+        formset = ContactsFormSet(initial=[{"nom": c.nom, "email": c.email, "is_checked": True} for c in contacts])
+    else:
+        formset = ContactsFormSet(initial=[{"nom": c.nom, "email": c.email} for c in contacts])
     print(len(formset))
     if request.method == "POST":
         formset = ContactsFormSet(request.POST)

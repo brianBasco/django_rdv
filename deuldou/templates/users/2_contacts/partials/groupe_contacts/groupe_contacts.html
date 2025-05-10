@@ -35,6 +35,9 @@
             <ul class="list-group">
                 {% for contact in liste.contacts.all %}
                 <li class="list-group-item">{{ contact }}</li>
+
+                {% empty %}
+                <div>Il n'y a pas de contacts</div>
                 {% endfor %}
             </ul>
         </div>
